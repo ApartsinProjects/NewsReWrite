@@ -1,0 +1,7 @@
+.env
+.env.*
+!.env.example
+*.key
+secrets*
+*token*
+.hf_token

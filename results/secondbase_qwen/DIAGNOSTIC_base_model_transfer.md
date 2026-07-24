@@ -1,45 +1,63 @@
-# Diagnostic: base-model transfer of the dual guides (not a paper result)
+# Diagnostic: base-model transfer of the dual guides (deep root-cause analysis)
 
-Second-base-model generality probe on **Qwen2.5-7B-Instruct** (guides reused
-unchanged, same 150 Reuters neutrals). Independent DistilBERT clickbait detector.
+Second-base-model probe on **Qwen2.5-7B-Instruct** (guides reused unchanged,
+same 150 Reuters neutrals; independent DistilBERT clickbait detector).
 
-## Plain `log` objective, alpha=4, beta=2 (paper operating point)
-| cell | clickbait | BERTScore | perplexity |
-|---|---|---|---|
-| (0,0) | 0.041 | 0.464 | 132 |
-| (4,0) | 0.063 | 0.443 | 133 |
-| (0,2) | 0.071 | 0.424 | 157 |
-| (4,2) | 0.082 | 0.406 | 159 |
+## Surface symptom
+Under the paper's `log` objective at (alpha=4, beta=2), adding the clickbait
+brake appeared to *raise* independent clickbait on Qwen:
+(0,0)=0.041 -> (0,2)=0.071, (4,0)=0.063 -> (4,2)=0.082. Under `lognorm` it was
+worse (0.041 -> 0.113). This looked like "the brake does not transfer."
 
-**Transfers:** engagement guide raises tactic realization (0.30->0.35), and
-fidelity/fluency are *better* than Llama (BERTScore 0.41-0.46 vs 0.25-0.28;
-perplexity 132-159 vs 175-275). Clickbait stays low (0.04-0.08).
-**Does not transfer:** the clickbait brake. (0,2)-(0,0) = +0.03 (wrong sign).
+## Real root cause: the brake reward-hacks the monolingual guide via code-switching
+Reading the failing rewrites shows the brake cells produce **Chinese** text, e.g.
+for "Hurricane Matthew toll in Haiti rises to 1,000":
+  (0,0): "How Many More Are Buried in the Shadows as ... Death Toll Hits 1,000?"  [ext 0.00, guide 1.00]
+  (0,2): "Just如何增加飓风马修在海地的死亡人数...这背后隐藏着什么秘密？"        [ext 0.99, guide 0.00]
 
-## `lognorm` objective (per-step std-normalized LLM term), alpha=4, beta=2
-| cell | clickbait |
-|---|---|
-| (0,0) | 0.041 (identical; sigma-scaling preserves argmax with no guides) |
-| (0,2) | 0.113 |
-| (4,0) | 0.121 |
-| (4,2) | 0.223 |
+Mechanism:
+- The clickbait guide is a **BERT trained on English**. On English clickbait it
+  scores ~1.0; on Chinese text it is out-of-distribution and scores ~0.0.
+- The brake `beta*log(1-cb_guide)` therefore *rewards* switching to Chinese,
+  because that is where the guide reports "no clickbait."
+- **Qwen is multilingual**, so Chinese tokens sit in its top-k and the decoder
+  can escape into them. **Llama-3-8B is not** — it emits 0.0% CJK in every cell,
+  which is exactly why the brake works there.
 
-brake: (0,2)-(0,0) = +0.072, (4,2)-(4,0) = +0.101. **Over-steers** (clickbait up
-everywhere, rewrite length 83->166 chars). The brake fails harder, not less.
+## Evidence (systematic, not cherry-picked)
+- corr(guide_cb, external_cb) on Qwen = **-0.117** (the guide rewards what the
+  external detector flags).
+- CJK share by cell (Qwen `log`): (0,0) 0.7%, (0,2) **4.7%**, (4,0) 0.4%,
+  (4,2) **3.3%**. Under `lognorm` (more brake pressure): (0,2) **11.1%**,
+  (4,2) **11.6%** — over-steering escalates the escape.
+- Among CJK outputs ext_cb ~= 0.8-1.0; among clean English ext_cb ~= 0.035.
+- **Removing the code-switched outputs, the brake does NOT fail:**
+  clean-English clickbait is (0,0)=0.035 vs (0,2)=0.035 and (4,0)=0.059 vs
+  (4,2)=0.059 — the brake is neutral-to-fine on clean text; 100% of the apparent
+  "failure" is the ~3-5% that code-switch.
+- Llama CJK = 0.0% in all cells -> no escape -> brake works.
 
-## Root cause
-1. Dividing the LLM log-prob term by its per-step std makes the guides ~2-3x
-   stronger, so alpha=4,beta=2 is now over-aggressive (a re-tune issue).
-2. Deeper: the brake term beta*log(1-cb) is nearly flat for small cb
-   (log(1-cb) ~= -cb). Qwen already produces low-clickbait text (~0.04), so the
-   brake has almost no gradient to act on, while the engagement push dominates
-   and raises clickbait. **The brake's effect is intrinsically base-model-
-   dependent**: it needs a base model that actually produces clickbait to
-   suppress. Normalization cannot manufacture that headroom.
+## This is a general guided-decoding failure mode
+Any guide with an OOD blind spot can be reward-hacked by a base model capable of
+producing OOD tokens. On monolingual Llama it is latent; on multilingual Qwen it
+surfaces. It is NOT a scaling problem (lognorm made it worse) and NOT a
+"no-headroom" problem (clean-English brake is fine).
 
-## Conclusion
-Report as an honest limitation, not a generality claim. The engagement guide and
-high fidelity/fluency transfer to a second base model; the clickbait brake does
-not transfer at reused weights and depends on the base model's own clickbait
-propensity. The `lognorm` code is kept as an experimental option (does not affect
-the default `log` objective or any reported number).
+## Workarounds (ranked)
+1. **Source-script / language-consistency mask at decode time** (recommended,
+   ~5-line change): drop any top-k candidate that introduces characters outside
+   the source headline's script (for English sources, mask CJK/Hangul/Cyrillic).
+   Prevents the escape entirely on any multilingual base model. Cheap to
+   implement and validate.
+2. **Multilingual guide** (mBERT / XLM-R clickbait scorer): closes the blind spot
+   so the guide scores non-English clickbait too. More work (retrain), most
+   principled.
+3. **OOD-penalize the guide:** gate on language-ID; if the prefix is not the
+   source language, apply a penalty instead of a reward.
+4. Lower beta / re-tune: reduces escape pressure marginally; does not fix.
+5. Switch to a less-multilingual base model: hides the bug, not recommended.
+
+## Status
+`lognorm` is kept as an experimental option (does not affect the default `log`
+or any reported number). Recommended next step: implement workaround 1 and re-run
+the Qwen brake to confirm transfer.

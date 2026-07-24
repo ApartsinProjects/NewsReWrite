@@ -574,7 +574,9 @@ def run_b2(n_items: int = 300, seeds: str = "42", top_k: int = 50,
 @app.function(volumes={STORE_MOUNT: STORE}, timeout=10 * 60 * 60)
 def run_b2_parallel(n_items: int = 300, n_shards: int = 4, seeds: str = "42",
                     top_k: int = 50, objective: str = "log",
-                    alpha_on: float = 0.0, beta_on: float = 0.0) -> None:
+                    alpha_on: float = 0.0, beta_on: float = 0.0,
+                    src_name: str = "source_neutrals.csv", out_subdir: str = "b2",
+                    base_llm: str = "", latin_only: bool = False) -> None:
     """Fan out run_b2 across n_shards GPU containers over disjoint item ranges,
     each writing shard-tagged CSVs to results/b2. Wall-clock drops ~n_shards x
     (same total compute). item_ids stay global so score_rewrites reads every
@@ -591,7 +593,9 @@ def run_b2_parallel(n_items: int = 300, n_shards: int = 4, seeds: str = "42",
         handles.append(run_b2.spawn(
             n_items=n_items, seeds=seeds, top_k=top_k, objective=objective,
             alpha_on=alpha_on, beta_on=beta_on,
-            item_start=s, item_end=e, shard_tag=f"_sh{k}"))
+            item_start=s, item_end=e, shard_tag=f"_sh{k}",
+            src_name=src_name, out_subdir=out_subdir,
+            base_llm=base_llm, latin_only=latin_only))
     print(f"[modal] {len(handles)} shards running concurrently; waiting...",
           flush=True)
     for h in handles:
@@ -600,7 +604,7 @@ def run_b2_parallel(n_items: int = 300, n_shards: int = 4, seeds: str = "42",
     # reload the volume or it still sees the pre-spawn (empty) view and the
     # check spuriously fails with "found 0".
     STORE.reload()
-    _verify().check_rewrites(f"{STORE_MOUNT}/results/b2", expect_min_files=len(handles))
+    _verify().check_rewrites(f"{STORE_MOUNT}/results/{out_subdir}", expect_min_files=len(handles))
     print(f"[modal] all {len(handles)} b2 shards complete.", flush=True)
 
 

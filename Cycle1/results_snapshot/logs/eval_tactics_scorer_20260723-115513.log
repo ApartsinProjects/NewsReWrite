@@ -1,9 +1,0 @@
-[modal] $ /usr/local/bin/python /workspace/track_b/b1_external_benchmarks/eval_tactics_scorer.py --gpu --n-boot 1000 --webis-dir /workspace/store/data/webis17 --out-json /workspace/store/results/b1_tactics_external.json --out-md /workspace/store/results/b1_tactics_external.md
-[b1-tac] ETA: ~4 min CPU, <1 min GPU.
-/usr/local/lib/python3.11/site-packages/transformers/utils/hub.py:124: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-[b1-tac] Webis rows: 2459
-[b1-tac] scoring done in 5.4s
-[b1-tac] wrote /workspace/store/results/b1_tactics_external.json and /workspace/store/results/b1_tactics_external.md
-
-[modal] exit code: 0

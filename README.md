@@ -11,6 +11,24 @@
 
 ---
 
+## Repository structure
+
+Reorganized (revision 2) into a clean research layout:
+
+- **`paper/`** — `current/` (latest v9_cycle1 DOCX/HTML/PDF, revision-2 edits highlighted yellow), `original_submission/` (the version originally submitted), `appendices/`
+- **`reviews/`** — `response_letters/` (point-by-point editor/reviewer responses, changelog, revision plan); `reviewer_reports/` *(local-only, not tracked — confidential)*
+- **`code/`** — `dataset_generation/`, `guide_models/` (BERT guides + original FUDGE decoder), `evaluation/`, `revision_experiments/` (external validation, dual-guidance ablation, DExperts/GeDi comparison, human-labeling; Modal orchestration in `modal_run/`), `legacy/`
+- **`data/`** — `processed/` (synthetic corpus, source neutrals, prefix splits — tracked), `external/` (Webis-17, Chakraborty-16, ISOT — *local-only, re-downloadable*), `prefix_generation/`
+- **`results/`** — per-item scores, metric summaries, method comparison + Pareto figure, human-labeling packages + analysis
+- **`models/`** — trained checkpoints (`guides/`, `baselines/`) *(local-only, ~18 GB, not tracked)*
+- **`archive/`** — superseded paper versions (v7, v8, FINAL drafts) and code
+
+**Revision 2 status.** The paper now reports a full quantitative program (Section 4): external validation of the guides on human-authored corpora (Chakraborty AUROC 0.955), a four-cell dual-guidance ablation on 300 held-out headlines, a Pareto comparison against DExperts and GeDi, and an LLM-simulated-proxy human evaluation. Details in `reviews/response_letters/editor_response_letter.md`.
+
+> Model checkpoints and large external datasets are git-ignored (kept local) to keep the repo lightweight; regenerate them with the code in `code/` or re-download.
+
+---
+
 ## 1. Research Motivation
 
 Digital news headlines are the single largest determinant of what readers click, share, and ultimately consume. In algorithmically mediated feeds, a headline must compete for attention inside a cognitive window of less than two seconds, while simultaneously remaining a faithful summary of the underlying article. This produces a structural conflict that sits at the core of contemporary journalism:

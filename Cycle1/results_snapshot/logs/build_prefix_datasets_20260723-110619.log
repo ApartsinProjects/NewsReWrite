@@ -1,7 +1,0 @@
-[modal] $ /usr/local/bin/python /workspace/track_b/modal_run/train_guides/build_prefix_datasets.py --headlines-csv /workspace/store/data/synthetic_clickbait.csv --out-trainval-binary /workspace/store/data/prefix_splits/trainval_binary.csv --out-test-binary /workspace/store/data/prefix_splits/test_binary.csv --out-trainval-tactics /workspace/store/data/prefix_splits/trainval_tactics.csv --out-test-tactics /workspace/store/data/prefix_splits/test_tactics.csv
-[build] loaded 12599 source headline rows
-[build] split: trainval=10079  test=2520
-[build] emitted 80632 trainval prefixes, 20160 test prefixes
-[build] wrote all four CSVs
-
-[modal] exit code: 0

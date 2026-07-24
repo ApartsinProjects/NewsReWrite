@@ -1,3 +1,4 @@
+# --- secrets (never commit) ---
 .env
 .env.*
 !.env.example
@@ -6,17 +7,25 @@ secrets*
 *token*
 .hf_token
 
-# --- revision-2 artifacts: exclude models, large data, caches, confidential ---
-**/modal_export/models/
-**/modal_export/data/
-**/modal_export/.cache/
-**/data/raw/
+# --- model checkpoints: large, kept LOCAL only ---
+/models/
 *.safetensors
 *.pt
 *.bin
+*.ckpt
+
+# --- large external datasets: kept LOCAL only (re-downloadable) ---
+/data/external/
+
+# --- confidential peer-review reports: kept LOCAL only ---
+/reviews/reviewer_reports/
+
+# --- caches / build junk ---
 **/__pycache__/
 *.pyc
-reviewer1.txt.txt
-reviewer2.pdf
-*.PREresults.bak.docx
+.venv/
+.idea/
+.pytest_cache/
 ~$*.docx
+*.PREresults.bak.docx
+.DS_Store

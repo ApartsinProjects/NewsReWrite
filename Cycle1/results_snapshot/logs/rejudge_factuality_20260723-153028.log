@@ -1,9 +1,0 @@
-[modal] $ /usr/local/bin/python /workspace/track_b/b2_held_out_rewrite_eval/rejudge_factuality.py --in-dir /workspace/store/results/b2 --max-per-cell 150
-[factuality] re-judging 600 rows (<= 150/cell) across 4 cells
-[factuality] per-cell (orig hallucination -> refined new-fact):
-  a0.0_b0.0    n= 150  orig=0.120  refined_newfact=0.180
-  a0.0_b2.0    n= 150  orig=0.080  refined_newfact=0.233
-  a4.0_b0.0    n= 150  orig=0.160  refined_newfact=0.147
-  a4.0_b2.0    n= 150  orig=0.127  refined_newfact=0.200
-
-[modal] exit code: 0

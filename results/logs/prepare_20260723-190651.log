@@ -1,0 +1,5 @@
+[modal] $ /usr/local/bin/python /workspace/track_b/human_labeling_prep/prepare.py --out-dir /workspace/store/results/human_labeling --c1-n-items 150 --c2-n-items 100 --n-raters 3 --seed 20260723 --synthetic-csv /workspace/store/data/synthetic_clickbait.csv --per-item-csv /workspace/store/results/b2/per_item_scores.csv /workspace/store/results/b4/per_item_scores.csv /workspace/store/results/b6_dexperts/per_item_scores.csv /workspace/store/results/b6_gedi/per_item_scores.csv --method-labels b2 b4 b6_dexperts b6_gedi
+[c1] wrote 150 items x 3 raters to /workspace/store/results/human_labeling/c1_rubric_validation
+[c2] wrote 1500 items x 3 raters to /workspace/store/results/human_labeling/c2_rewrite_quality
+
+[modal] exit code: 0

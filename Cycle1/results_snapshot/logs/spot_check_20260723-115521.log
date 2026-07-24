@@ -1,8 +1,0 @@
-[modal] $ /usr/local/bin/python /workspace/track_b/b7_reuters_neutrality/spot_check.py --gpu --isot-csv /workspace/store/data/isot/True.csv --out-md /workspace/store/results/b7/reuters_neutrality_external.md --out-csv /workspace/store/results/b7/reuters_probs_external.csv
-[b7] 21417 rows, 592 duplicate titles removed, scoring 20825 unique Reuters headlines
-[b7] ETA CPU ~2 min, GPU ~10 s
-/usr/local/lib/python3.11/site-packages/transformers/utils/hub.py:124: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-[b7] wrote /workspace/store/results/b7/reuters_neutrality_external.md and /workspace/store/results/b7/reuters_probs_external.csv
-
-[modal] exit code: 0

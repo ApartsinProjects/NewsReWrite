@@ -1,0 +1,39 @@
+[modal] $ /usr/local/bin/python /workspace/track_b/b2_held_out_rewrite_eval/run_rewrites.py --test-csv /workspace/store/data/source_neutrals.csv --n-items 50 --seeds 42 --top-k 50 --objective log --item-start 0 --item-end 0 --out-dir /workspace/store/results/b2_floor --cells 0:0,4:2 --fluency-top-p 0.9
+[b2] raw generations -> /workspace/store/results/b2_floor/generations.jsonl
+[b2] 4-cell ablation with on-weights alpha_on=2.0, beta_on=2.0
+[b2] explicit cells override: [(0.0, 0.0), (4.0, 2.0)]
+[b2] objective = log
+[b2] test set: /workspace/store/data/source_neutrals.csv column=title rows=50 (item_id 0..49)
+[b2] decoding = GREEDY (deterministic, faithful to the paper). Multiple seeds would only replicate identical rows, so replication is over ITEMS via bootstrap in score_rewrites.py, NOT over seeds. Use --sample if you want seed-level variance.
+[b2] planned rewrites: 300
+[b2] ETA @ 7 s/rewrite on GPU: 0.6 h
+[b2] ETA @ 30 s/rewrite on CPU: 2.5 h
+[b2] STRONGLY RECOMMEND running via gpu2modal for anything above N=50.
+[b2] device = cuda
+/usr/local/lib/python3.11/site-packages/transformers/utils/hub.py:124: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]
+Loading checkpoint shards:  25%|██▌       | 1/4 [00:07<00:22,  7.53s/it]
+Loading checkpoint shards:  50%|█████     | 2/4 [00:12<00:12,  6.31s/it]
+Loading checkpoint shards:  75%|███████▌  | 3/4 [00:18<00:06,  6.17s/it]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:20<00:00,  4.50s/it]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:20<00:00,  5.23s/it]
+[b2] -> /workspace/store/results/b2_floor/rewrites_a0.0_b0.0_s42.csv (resume: 0 rows already present)
+[b2] 25/300 rate=0.62/s ETA=7.4 min
+[b2] 50/300 rate=0.64/s ETA=6.5 min
+[b2] 75/300 rate=0.65/s ETA=5.8 min
+[b2] 100/300 rate=0.65/s ETA=5.1 min
+[b2] 125/300 rate=0.67/s ETA=4.3 min
+[b2] 150/300 rate=0.67/s ETA=3.7 min
+[b2] -> /workspace/store/results/b2_floor/rewrites_a4.0_b2.0_s42.csv (resume: 0 rows already present)
+[b2] 175/300 rate=0.66/s ETA=3.2 min
+[b2] 200/300 rate=0.65/s ETA=2.6 min
+[b2] 225/300 rate=0.64/s ETA=2.0 min
+[b2] 250/300 rate=0.64/s ETA=1.3 min
+[b2] 275/300 rate=0.64/s ETA=0.7 min
+[b2] 300/300 rate=0.64/s ETA=0.0 min
+[b2] done in 7.8 min
+
+[modal] exit code: 0

@@ -524,7 +524,8 @@ def run_b4(n_items: int = 300, seeds: str = "42,43,44") -> None:
 def run_b2(n_items: int = 300, seeds: str = "42", top_k: int = 50,
            objective: str = "log", alpha_on: float = 0.0, beta_on: float = 0.0,
            sweep: str = "", item_start: int = 0, item_end: int = 0,
-           shard_tag: str = "") -> None:
+           shard_tag: str = "",
+           src_name: str = "source_neutrals.csv", out_subdir: str = "b2") -> None:
     # objective="log" (default) is canonical log-domain FUDGE. The on-weight
     # scale differs from the paper's prob-domain heuristic, so run the tuning
     # sweep (run_b2_sweep) once and pass the winning alpha_on/beta_on here.
@@ -533,7 +534,7 @@ def run_b2(n_items: int = 300, seeds: str = "42", top_k: int = 50,
     # item_start/item_end/shard_tag are set by run_b2_parallel for fan-out.
     _ensure_dirs()
     v = _verify()
-    src = Path(f"{STORE_MOUNT}/data/source_neutrals.csv")
+    src = Path(f"{STORE_MOUNT}/data/{src_name}")
     if not src.exists():
         raise SystemExit(f"missing {src}")
     v.check_source_neutrals(src, min_rows=(item_end or n_items))
@@ -553,7 +554,7 @@ def run_b2(n_items: int = 300, seeds: str = "42", top_k: int = 50,
         "--item-start", str(item_start),
         "--item-end", str(item_end),
         "--shard-tag", shard_tag,
-        "--out-dir", f"{STORE_MOUNT}/results/b2",
+        "--out-dir", f"{STORE_MOUNT}/results/{out_subdir}",
     ]
     if alpha_on > 0:
         cmd += ["--alpha-on", str(alpha_on)]
@@ -562,7 +563,7 @@ def run_b2(n_items: int = 300, seeds: str = "42", top_k: int = 50,
     if sweep:
         cmd += ["--sweep", sweep]
     _run(cmd, periodic_commit_s=180)
-    v.check_rewrites(f"{STORE_MOUNT}/results/b2", expect_min_files=1)
+    v.check_rewrites(f"{STORE_MOUNT}/results/{out_subdir}", expect_min_files=1)
     STORE.commit()
 
 

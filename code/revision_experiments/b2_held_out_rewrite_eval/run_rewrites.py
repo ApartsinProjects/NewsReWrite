@@ -443,7 +443,7 @@ def main() -> int:
 
     # Build the (alpha, beta) grid. Either the 4-cell ablation from the
     # objective-appropriate on-weight, or a full sweep for re-tuning.
-    on = DEFAULT_ON[args.objective]
+    on = DEFAULT_ON.get(args.objective, DEFAULT_ON["log"])  # lognorm shares log's on-weight
     a_on = args.alpha_on if args.alpha_on is not None else on
     b_on = args.beta_on if args.beta_on is not None else on
     if args.sweep:

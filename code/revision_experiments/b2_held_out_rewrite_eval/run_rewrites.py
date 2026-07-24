@@ -68,6 +68,15 @@ from common.paths import (
 LOG_EPS = 1e-6
 LENGTH_BONUS_SCALE_LOG = 5.0
 
+# Characters outside the Latin script (CJK, Hangul, kana, Cyrillic, Hebrew,
+# Arabic). Used by the --latin-only language-consistency mask to stop the
+# clickbait brake from reward-hacking the English-only guide by code-switching
+# on a multilingual base model.
+import re as _re
+_NONLATIN_RE = _re.compile(
+    "[぀-ヿ㐀-鿿가-힯Ѐ-ӿ֐-׿؀-ۿ]"
+)
+
 # Default "on" weight for the 4-cell ablation, per objective. The prob-domain
 # value (0.7) was the paper's; the log-domain value is a starting point that
 # MUST be confirmed by a --sweep before the ablation is reported.
@@ -188,6 +197,7 @@ def _fudge_generate(
     temperature: float = 1.0,
     name_tactics: bool = True,
     fluency_top_p: float | None = None,
+    latin_only: bool = False,
 ) -> str:
     """(alpha, beta) FUDGE decoding.
 
@@ -321,6 +331,16 @@ def _fudge_generate(
                     s = p_llm + alpha_dyn * tac - beta * p_cb + length_bonus
                 cand_scores.append(s)
 
+            # Language-consistency mask: on a multilingual base model the
+            # clickbait brake can reward-hack the English-only guide by
+            # code-switching into a script the guide scores as non-clickbait.
+            # Drop any candidate that introduces a non-Latin character so the
+            # guidance stays within the source language.
+            if latin_only:
+                for j in range(len(cand_scores)):
+                    if _NONLATIN_RE.search(cand_texts[j]):
+                        cand_scores[j] = float("-inf")
+
             # Fluency floor: restrict FUDGE reranking to the LLM's nucleus.
             # topk returns candidates sorted by logit desc, so accumulate their
             # true LLM probability and mask out everything past the smallest
@@ -411,6 +431,11 @@ def main() -> int:
                     help="restrict FUDGE reranking to the LLM's top-p nucleus "
                          "(e.g. 0.9) so the guide cannot pick grammar-breaking "
                          "low-probability tokens. Off by default.")
+    ap.add_argument("--latin-only", action="store_true",
+                    help="mask top-k candidates that introduce non-Latin "
+                         "characters. Prevents the clickbait brake from "
+                         "reward-hacking the English-only guide by code-switching "
+                         "into another script on a multilingual base model.")
     ap.add_argument("--cells", default=None,
                     help="explicit (alpha:beta) cells to generate, comma "
                          "separated, e.g. '0:0,4:2'. Overrides the default "
@@ -561,6 +586,7 @@ def main() -> int:
                                 sample=args.sample, temperature=args.temperature,
                                 name_tactics=not args.neutral_prompt,
                                 fluency_top_p=args.fluency_top_p,
+                                latin_only=args.latin_only,
                             )
                         except Exception as e:
                             print(f"[b2] WARN item {i} tactic '{label}' "

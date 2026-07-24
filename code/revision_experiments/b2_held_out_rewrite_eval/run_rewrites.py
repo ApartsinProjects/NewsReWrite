@@ -289,16 +289,27 @@ def _fudge_generate(
             cb_probs = score_cb_batch(cand_texts)
             tac_scores = score_tac_batch(cand_texts)
 
+            # lognorm: divide the base-LLM log-prob term by its per-step spread
+            # over the top-k set, so alpha/beta weight the guides against a
+            # unit-variance LLM signal and become base-model-independent. A more
+            # confident model (wider log-prob spread) is rescaled to match.
+            llm_tau = 1.0
+            if objective == "lognorm":
+                _ll = [logprobs[t].item() for t in top_idx]
+                _mu = sum(_ll) / len(_ll)
+                _var = sum((x - _mu) ** 2 for x in _ll) / max(len(_ll) - 1, 1)
+                llm_tau = math.sqrt(_var) or 1.0
+
             cand_scores: list[float] = []
             for j, tok_id in enumerate(top_idx):
                 p_cb = cb_probs[j]
                 tac = tac_scores[j]
                 length_bonus = length_bonuses[j]
-                if objective == "log":
+                if objective in ("log", "lognorm"):
                     # Canonical FUDGE: additive log-probabilities. Guard the
                     # off cells (alpha_dyn==0 or beta==0) so we never evaluate
                     # 0 * log(0) = nan, and clamp every log argument.
-                    s = logprobs[tok_id].item()
+                    s = logprobs[tok_id].item() / llm_tau
                     if alpha_dyn > 0 and have_pos:
                         s += alpha_dyn * math.log(max(tac, LOG_EPS))
                     if beta > 0:
@@ -367,11 +378,14 @@ def main() -> int:
                          "stay faithful to the paper's greedy decoding.")
     ap.add_argument("--temperature", type=float, default=1.0,
                     help="softmax temperature used only when --sample is set.")
-    ap.add_argument("--objective", choices=["log", "prob"], default="log",
+    ap.add_argument("--objective", choices=["log", "prob", "lognorm"], default="log",
                     help="log (default) = canonical FUDGE log-domain "
                          "factorization log p_llm + a*log(tac) + b*log(1-cb); "
-                         "prob = the paper's additive-probability heuristic. "
-                         "The on-weight scale differs between the two; re-tune "
+                         "prob = the paper's additive-probability heuristic; "
+                         "lognorm = log but the base-LLM log-prob term is divided "
+                         "by its per-step std over the top-k candidate set, making "
+                         "alpha/beta scale-invariant across base models. "
+                         "The on-weight scale differs between objectives; re-tune "
                          "with --sweep after changing this.")
     ap.add_argument("--alpha-on", type=float, default=None,
                     help="active positive-guidance weight for the 4-cell "

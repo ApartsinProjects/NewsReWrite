@@ -525,7 +525,8 @@ def run_b2(n_items: int = 300, seeds: str = "42", top_k: int = 50,
            objective: str = "log", alpha_on: float = 0.0, beta_on: float = 0.0,
            sweep: str = "", item_start: int = 0, item_end: int = 0,
            shard_tag: str = "",
-           src_name: str = "source_neutrals.csv", out_subdir: str = "b2") -> None:
+           src_name: str = "source_neutrals.csv", out_subdir: str = "b2",
+           base_llm: str = "") -> None:
     # objective="log" (default) is canonical log-domain FUDGE. The on-weight
     # scale differs from the paper's prob-domain heuristic, so run the tuning
     # sweep (run_b2_sweep) once and pass the winning alpha_on/beta_on here.
@@ -562,7 +563,8 @@ def run_b2(n_items: int = 300, seeds: str = "42", top_k: int = 50,
         cmd += ["--beta-on", str(beta_on)]
     if sweep:
         cmd += ["--sweep", sweep]
-    _run(cmd, periodic_commit_s=180)
+    _run(cmd, env_extra=({"BASE_LLM_ID": base_llm} if base_llm else None),
+         periodic_commit_s=180)
     v.check_rewrites(f"{STORE_MOUNT}/results/{out_subdir}", expect_min_files=1)
     STORE.commit()
 

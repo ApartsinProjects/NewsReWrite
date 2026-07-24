@@ -1,0 +1,33 @@
+[modal] $ /usr/local/bin/python /workspace/track_b/b6_dexperts_gedi/train_dexperts.py --synthetic-csv /workspace/store/data/synthetic_clickbait.csv --source-csv /workspace/store/data/source_neutrals.csv --expert-out /workspace/store/models/dexperts_expert --antiexpert-out /workspace/store/models/dexperts_antiexpert --model-name meta-llama/Llama-3.2-1B
+/usr/local/lib/python3.11/site-packages/transformers/utils/hub.py:124: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+[train] device=cuda model=meta-llama/Llama-3.2-1B
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[train] /workspace/store/data/synthetic_clickbait.csv column='clickbait': 12599 headlines
+[train] /workspace/store/data/source_neutrals.csv column='title': 12600 headlines
+[train] === fine-tuning expert(clickbait) -> /workspace/store/models/dexperts_expert ===
+Traceback (most recent call last):
+  File "/workspace/track_b/b6_dexperts_gedi/train_dexperts.py", line 139, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/workspace/track_b/b6_dexperts_gedi/train_dexperts.py", line 131, in main
+    finetune(expert_texts, args.expert_out, "expert(clickbait)")
+  File "/workspace/track_b/b6_dexperts_gedi/train_dexperts.py", line 87, in finetune
+    model = AutoModelForCausalLM.from_pretrained(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/transformers/models/auto/auto_factory.py", line 523, in from_pretrained
+    config, kwargs = AutoConfig.from_pretrained(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/transformers/models/auto/configuration_auto.py", line 958, in from_pretrained
+    return config_class.from_dict(config_dict, **unused_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/transformers/configuration_utils.py", line 768, in from_dict
+    config = cls(**config_dict)
+             ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/transformers/models/llama/configuration_llama.py", line 161, in __init__
+    self._rope_scaling_validation()
+  File "/usr/local/lib/python3.11/site-packages/transformers/models/llama/configuration_llama.py", line 182, in _rope_scaling_validation
+    raise ValueError(
+ValueError: `rope_scaling` must be a dictionary with two fields, `type` and `factor`, got {'factor': 32.0, 'high_freq_factor': 4.0, 'low_freq_factor': 1.0, 'original_max_position_embeddings': 8192, 'rope_type': 'llama3'}
+
+[modal] exit code: 1

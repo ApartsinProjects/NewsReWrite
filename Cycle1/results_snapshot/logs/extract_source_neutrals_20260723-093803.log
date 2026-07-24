@@ -1,0 +1,8 @@
+[modal] $ /usr/local/bin/python /workspace/track_b/modal_run/train_guides/extract_source_neutrals.py --isot-csv /workspace/store/data/isot/True.csv --out-csv /workspace/store/data/source_neutrals.csv --max-rows 12600 --seed 42
+[extract] reading /workspace/store/data/isot/True.csv
+[extract] read 21417 rows, columns=['title', 'text', 'subject', 'date']
+[extract] deduplicated 21417 -> 20825 rows
+[extract] stratified subsample to 12600 rows (6300 per subject across 2 subjects)
+[extract] wrote /workspace/store/data/source_neutrals.csv  (12600 rows)
+
+[modal] exit code: 0

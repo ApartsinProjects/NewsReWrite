@@ -5,3 +5,18 @@
 secrets*
 *token*
 .hf_token
+
+# --- revision-2 artifacts: exclude models, large data, caches, confidential ---
+**/modal_export/models/
+**/modal_export/data/
+**/modal_export/.cache/
+**/data/raw/
+*.safetensors
+*.pt
+*.bin
+**/__pycache__/
+*.pyc
+reviewer1.txt.txt
+reviewer2.pdf
+*.PREresults.bak.docx
+~$*.docx

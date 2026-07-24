@@ -1,0 +1,76 @@
+[modal] $ /usr/local/bin/python /workspace/track_b/b8_method_comparison/compare_methods.py --inputs /workspace/store/results/b2/per_item_scores.csv /workspace/store/results/b4/per_item_scores.csv /workspace/store/results/b6_dexperts/per_item_scores.csv /workspace/store/results/b6_gedi/per_item_scores.csv --labels fudge prompt_only dexperts gedi --out-dir /workspace/store/results/method_comparison
+[cmp] wrote /workspace/store/results/method_comparison/comparison.json + comparison.md + pareto_fidelity_vs_clickbait.png
+{
+  "methods": [
+    "fudge",
+    "prompt_only",
+    "dexperts",
+    "gedi"
+  ],
+  "reference": "fudge",
+  "metrics": [
+    "bertscore_f1",
+    "sts",
+    "clickbait_prob_external",
+    "attr_realised_frac_guide_circular",
+    "judge_attr_confirmed_frac"
+  ],
+  "tradeoff_table": [
+    {
+      "method": "dexperts",
+      "setting": "a0.5_b0.0",
+      "n": 900,
+      "bertscore_f1": 0.264,
+      "bertscore_f1_ci": [
+        0.2564,
+        0.2712
+      ],
+      "sts": 0.621,
+      "sts_ci": [
+        0.6134,
+        0.6282
+      ],
+      "clickbait_prob_external": 0.0726,
+      "clickbait_prob_external_ci": [
+        0.0601,
+        0.0855
+      ],
+      "attr_realised_frac_guide_circular": 0.1589,
+      "attr_realised_frac_guide_circular_ci": [
+        0.145,
+        0.175
+      ],
+      "judge_attr_confirmed_frac": 0.45,
+      "judge_attr_confirmed_frac_ci": [
+        0.38,
+        0.525
+      ]
+    },
+    {
+      "method": "dexperts",
+      "setting": "a1.0_b0.0",
+      "n": 900,
+      "bertscore_f1": 0.2197,
+      "bertscore_f1_ci": [
+        0.2125,
+        0.2274
+      ],
+      "sts": 0.5713,
+      "sts_ci": [
+        0.5636,
+        0.5797
+      ],
+      "clickbait_prob_external": 0.1541,
+      "clickbait_prob_external_ci": [
+        0.1342,
+        0.1741
+      ],
+      "attr_realised_frac_guide_circular": 0.2133,
+      "attr_realised_frac_guide_circular_ci": [
+        0.1972,
+        0.2306
+      ],
+      "judge_attr_confirmed_frac": 0.455,
+      "judge_attr_confirmed_
+
+[modal] exit code: 0

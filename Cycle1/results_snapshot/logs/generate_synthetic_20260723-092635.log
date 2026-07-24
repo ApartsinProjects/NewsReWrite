@@ -1,0 +1,139 @@
+[modal] $ /usr/local/bin/python /workspace/track_b/modal_run/train_guides/generate_synthetic.py --source-csv /workspace/store/data/source_neutrals.csv --out-csv /workspace/store/data/synthetic_clickbait.csv --batch-size 15 --max-rows 12600 --seed 42 --no-resume
+[gen] loaded 2000 titles (cap=12600)
+[gen] raw generations -> /workspace/store/data/synthetic_clickbait.raw.jsonl
+[gen] 2000 titles to generate, wall-clock ETA ~10 min
+
+  0%|          | 0/134 [00:00<?, ?it/s][gen] saved 15 rows (15/2000 titles, 0 dropped)
+
+  1%|          | 1/134 [00:11<26:03, 11.76s/it][gen] saved 30 rows (30/2000 titles, 0 dropped)
+
+  1%|▏         | 2/134 [00:22<24:48, 11.28s/it][gen] saved 45 rows (45/2000 titles, 0 dropped)
+
+  2%|▏         | 3/134 [00:33<23:44, 10.88s/it][gen] saved 60 rows (60/2000 titles, 0 dropped)
+
+  3%|▎         | 4/134 [00:42<22:09, 10.22s/it][gen] saved 75 rows (75/2000 titles, 0 dropped)
+
+  4%|▎         | 5/134 [00:51<21:28,  9.99s/it][gen] saved 90 rows (90/2000 titles, 0 dropped)
+
+  4%|▍         | 6/134 [01:02<21:30, 10.08s/it][gen] saved 105 rows (105/2000 titles, 0 dropped)
+
+  5%|▌         | 7/134 [01:11<20:39,  9.76s/it][gen] saved 120 rows (120/2000 titles, 0 dropped)
+
+  6%|▌         | 8/134 [01:19<19:46,  9.42s/it][gen] saved 135 rows (135/2000 titles, 0 dropped)
+
+  7%|▋         | 9/134 [01:30<20:18,  9.75s/it][gen] saved 150 rows (150/2000 titles, 0 dropped)
+
+  7%|▋         | 10/134 [01:40<20:05,  9.72s/it][gen] saved 165 rows (165/2000 titles, 0 dropped)
+
+  8%|▊         | 11/134 [01:49<19:28,  9.50s/it][gen] saved 180 rows (180/2000 titles, 0 dropped)
+
+  9%|▉         | 12/134 [01:59<19:48,  9.74s/it][gen] saved 195 rows (195/2000 titles, 0 dropped)
+
+ 10%|▉         | 13/134 [02:08<19:02,  9.44s/it][gen] saved 210 rows (210/2000 titles, 0 dropped)
+
+ 10%|█         | 14/134 [02:16<18:26,  9.22s/it][gen] saved 225 rows (225/2000 titles, 0 dropped)
+
+ 11%|█         | 15/134 [02:26<18:49,  9.49s/it][gen] saved 240 rows (240/2000 titles, 0 dropped)
+
+ 12%|█▏        | 16/134 [02:37<19:04,  9.70s/it][gen] saved 255 rows (255/2000 titles, 0 dropped)
+
+ 13%|█▎        | 17/134 [02:45<18:22,  9.43s/it][gen] saved 270 rows (270/2000 titles, 0 dropped)
+
+ 13%|█▎        | 18/134 [02:55<18:04,  9.35s/it][gen] saved 285 rows (285/2000 titles, 0 dropped)
+
+ 14%|█▍        | 19/134 [03:04<17:52,  9.33s/it][gen] saved 300 rows (300/2000 titles, 0 dropped)
+
+ 15%|█▍        | 20/134 [03:13<17:30,  9.22s/it][gen] saved 315 rows (315/2000 titles, 0 dropped)
+
+ 16%|█▌        | 21/134 [03:24<18:21,  9.74s/it][gen] saved 330 rows (330/2000 titles, 0 dropped)
+
+ 16%|█▋        | 22/134 [03:34<18:42, 10.03s/it][gen] saved 345 rows (345/2000 titles, 0 dropped)
+
+ 17%|█▋        | 23/134 [03:44<17:59,  9.72s/it][gen] saved 360 rows (360/2000 titles, 0 dropped)
+
+ 18%|█▊        | 24/134 [03:52<17:17,  9.43s/it][gen] saved 375 rows (375/2000 titles, 0 dropped)
+
+ 19%|█▊        | 25/134 [04:02<17:27,  9.61s/it][gen] saved 390 rows (390/2000 titles, 0 dropped)
+
+ 19%|█▉        | 26/134 [04:11<16:37,  9.24s/it][gen] saved 405 rows (405/2000 titles, 0 dropped)
+
+ 20%|██        | 27/134 [04:21<16:49,  9.44s/it][gen] saved 420 rows (420/2000 titles, 0 dropped)
+
+ 21%|██        | 28/134 [04:31<17:10,  9.72s/it][gen] saved 435 rows (435/2000 titles, 0 dropped)
+
+ 22%|██▏       | 29/134 [04:40<16:37,  9.50s/it][gen] saved 450 rows (450/2000 titles, 0 dropped)
+
+ 22%|██▏       | 30/134 [04:50<16:55,  9.77s/it][gen] saved 465 rows (465/2000 titles, 0 dropped)
+
+ 23%|██▎       | 31/134 [05:00<16:32,  9.63s/it][gen] saved 480 rows (480/2000 titles, 0 dropped)
+
+ 24%|██▍       | 32/134 [05:10<16:50,  9.91s/it][gen] saved 495 rows (495/2000 titles, 0 dropped)
+
+ 25%|██▍       | 33/134 [05:21<17:05, 10.16s/it][gen] saved 510 rows (510/2000 titles, 0 dropped)
+
+ 25%|██▌       | 34/134 [05:31<16:49, 10.10s/it][gen] saved 525 rows (525/2000 titles, 0 dropped)
+
+ 26%|██▌       | 35/134 [05:40<16:17,  9.87s/it][gen] saved 540 rows (540/2000 titles, 0 dropped)
+
+ 27%|██▋       | 36/134 [05:51<16:40, 10.21s/it][gen] saved 555 rows (555/2000 titles, 0 dropped)
+
+ 28%|██▊       | 37/134 [06:00<15:51,  9.81s/it][gen] saved 570 rows (570/2000 titles, 0 dropped)
+
+ 28%|██▊       | 38/134 [06:11<16:05, 10.06s/it][gen] saved 585 rows (585/2000 titles, 0 dropped)
+
+ 29%|██▉       | 39/134 [06:22<16:33, 10.46s/it][gen] saved 600 rows (600/2000 titles, 0 dropped)
+
+ 30%|██▉       | 40/134 [06:32<16:03, 10.25s/it][gen] saved 615 rows (615/2000 titles, 0 dropped)
+
+ 31%|███       | 41/134 [06:43<16:07, 10.40s/it][gen] saved 630 rows (630/2000 titles, 0 dropped)
+
+ 31%|███▏      | 42/134 [06:53<15:51, 10.34s/it][gen] saved 645 rows (645/2000 titles, 0 dropped)
+
+ 32%|███▏      | 43/134 [07:03<15:42, 10.36s/it][gen] saved 660 rows (660/2000 titles, 0 dropped)
+
+ 33%|███▎      | 44/134 [07:12<15:02, 10.03s/it][gen] saved 675 rows (675/2000 titles, 0 dropped)
+
+ 34%|███▎      | 45/134 [07:21<14:19,  9.66s/it][gen] saved 690 rows (690/2000 titles, 0 dropped)
+
+ 34%|███▍      | 46/134 [07:31<14:04,  9.59s/it][gen] saved 705 rows (705/2000 titles, 0 dropped)
+
+ 35%|███▌      | 47/134 [07:41<14:22,  9.91s/it][gen] saved 720 rows (720/2000 titles, 0 dropped)
+
+ 36%|███▌      | 48/134 [07:50<13:45,  9.60s/it][gen] saved 735 rows (735/2000 titles, 0 dropped)
+
+ 37%|███▋      | 49/134 [08:00<13:48,  9.74s/it][gen] saved 750 rows (750/2000 titles, 0 dropped)
+
+ 37%|███▋      | 50/134 [08:10<13:32,  9.68s/it][gen] saved 765 rows (765/2000 titles, 0 dropped)
+
+ 38%|███▊      | 51/134 [08:19<13:14,  9.57s/it][gen] saved 780 rows (780/2000 titles, 0 dropped)
+
+ 39%|███▉      | 52/134 [08:28<12:36,  9.22s/it][gen] saved 795 rows (795/2000 titles, 0 dropped)
+
+ 40%|███▉      | 53/134 [08:39<13:19,  9.88s/it][gen] saved 810 rows (810/2000 titles, 0 dropped)
+
+ 40%|████      | 54/134 [08:50<13:33, 10.17s/it][gen] saved 825 rows (825/2000 titles, 0 dropped)
+
+ 41%|████      | 55/134 [09:00<13:25, 10.19s/it][gen] saved 840 rows (840/2000 titles, 0 dropped)
+
+ 42%|████▏     | 56/134 [09:07<12:09,  9.35s/it][gen] saved 855 rows (855/2000 titles, 0 dropped)
+
+ 43%|████▎     | 57/134 [09:16<11:49,  9.22s/it][gen] saved 870 rows (870/2000 titles, 0 dropped)
+
+ 43%|████▎     | 58/134 [09:25<11:33,  9.12s/it][gen] saved 885 rows (885/2000 titles, 0 dropped)
+
+ 44%|████▍     | 59/134 [09:38<12:35, 10.07s/it][gen] saved 900 rows (900/2000 titles, 0 dropped)
+
+ 45%|████▍     | 60/134 [09:47<12:15,  9.94s/it][gen] saved 915 rows (915/2000 titles, 0 dropped)
+
+ 46%|████▌     | 61/134 [09:58<12:17, 10.11s/it][gen] saved 930 rows (930/2000 titles, 0 dropped)
+
+ 46%|████▋     | 62/134 [10:08<12:02, 10.04s/it][gen] saved 945 rows (945/2000 titles, 0 dropped)
+
+ 47%|████▋     | 63/134 [10:17<11:37,  9.82s/it][gen] saved 960 rows (960/2000 titles, 0 dropped)
+
+ 48%|████▊     | 64/134 [10:29<12:15, 10.51s/it][gen] saved 975 rows (975/2000 titles, 0 dropped)
+
+ 49%|████▊     | 65/134 [10:40<12:05, 10.52s/it][gen] saved 990 rows (990/2000 titles, 0 dropped)
+
+ 49%|████▉     | 66/134 [10:50<11:57, 10.55s/it][gen] saved 1005 rows (1005/2000 titles, 0 dropped)
+

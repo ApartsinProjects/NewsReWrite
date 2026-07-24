@@ -1,0 +1,26 @@
+[1] Biyani, P., Tsioutsiouliklis, K. & Blackmer, J. "8 amazing secrets for getting more clicks": detecting clickbaits in news streams using article informality. In Proc. 30th AAAI Conf. on Artificial Intelligence 94–102 (AAAI Press, 2016).
+[2] Chakraborty, A., Paranjape, B., Kakarla, S. & Ganguly, N. Stop clickbait: detecting and preventing clickbaits in online news media. In Proc. IEEE/ACM Int. Conf. on Advances in Social Networks Analysis and Mining (ASONAM) 9–16 (IEEE, 2016).
+[3] Potthast, M., Gollub, T., Hagen, M. & Stein, B. The Clickbait Challenge 2017: towards a regression model for clickbait strength. Preprint at https://arxiv.org/abs/1812.10847 (2018).
+[4] Jácobo-Morales, D. & Marino-Jiménez, M. Clickbait: research, challenges and opportunities: a systematic literature review. Online J. Commun. Media Technol. 14, e202458 (2024).
+[5] Alarfaj, F. K., Muqadas, A., Khan, H. U. & Naz, A. Clickbait detection in news headlines using RoBERTa-Large language model and deep embeddings. Sci. Rep. 15 (2025).
+[6] Muqadas, A. et al. Deep learning and sentence embeddings for detection of clickbait news from online content. Sci. Rep. 15, 13251 (2025).
+[7] Wang, Y. et al. Clickbait detection via prompt-tuning with titles only. IEEE Trans. Emerg. Top. Comput. Intell. 9, 695–705 (2024).
+[8] Wang, H. et al. Clickbait detection via large language models. In Proc. Int. Conf. on Intelligent Computing 462–474 (Springer, 2025).
+[9] Aubin Le Quéré, M. & Matias, J. N. When curiosity gaps backfire: effects of headline concreteness on information selection decisions. Sci. Rep. 15, 994 (2025).
+[10] Michaluk, W., Urban, T., Kubita, M., Kuntur, S. & Wróblewska, A. Click it or leave it: detecting and spoiling clickbait with informativeness measures and large language models. Preprint at https://arxiv.org/abs/2602.18171 (2026).
+[11] Nofar, L., Portal, T., Elbaz, A., Apartsin, A. & Aperstein, Y. An interpretable benchmark for clickbait detection and tactic attribution. Preprint at https://arxiv.org/abs/2509.10937 (2025).
+[12] Keskar, N. S., McCann, B., Varshney, L. R., Xiong, C. & Socher, R. CTRL: a conditional transformer language model for controllable generation. Preprint at https://arxiv.org/abs/1909.05858 (2019).
+[13] Dathathri, S. et al. Plug and play language models: a simple approach to controlled text generation. Preprint at https://arxiv.org/abs/1912.02164 (2019).
+[14] Krause, B. et al. GeDi: generative discriminator guided sequence generation. In Findings of the Association for Computational Linguistics: EMNLP 2021 4929–4952 (ACL, 2021).
+[15] Liu, A. et al. DExperts: decoding-time controlled text generation with experts and anti-experts. In Proc. 59th Annual Meeting of the Association for Computational Linguistics (ACL) 6691–6706 (ACL, 2021).
+[16] Yang, K. & Klein, D. FUDGE: controlled text generation with future discriminators. In Proc. 2021 Conf. of the North American Chapter of the Association for Computational Linguistics (NAACL) 3511–3535 (ACL, 2021).
+[17] Ahmed, H., Traore, I. & Saad, S. Detecting opinion spams and fake news using text classification. Secur. Priv. 1, e9 (2018).
+[18] Ahmed, H., Traore, I. & Saad, S. Detection of online fake news using n-gram analysis and machine learning techniques. In Proc. Int. Conf. on Intelligent, Secure, and Dependable Systems in Distributed and Cloud Environments 127–138 (Springer, 2017).
+[19] Grattafiori, A. et al. The Llama 3 herd of models. Preprint at https://arxiv.org/abs/2407.21783 (2024).
+[20] Yang, A. et al. Qwen2.5 technical report. Preprint at https://arxiv.org/abs/2412.15115 (2024).
+[21] OpenAI. GPT-4o system card. Preprint at https://arxiv.org/abs/2410.21276 (2024).
+[22] Devlin, J., Chang, M.-W., Lee, K. & Toutanova, K. BERT: pre-training of deep bidirectional transformers for language understanding. In Proc. 2019 Conf. of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies Vol. 1, 4171–4186 (ACL, 2019).
+[23] Sanh, V., Debut, L., Chaumond, J. & Wolf, T. DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter. Preprint at https://arxiv.org/abs/1910.01108 (2019).
+[24] He, P., Gao, J. & Chen, W. DeBERTaV3: improving DeBERTa using ELECTRA-style pre-training with gradient-disentangled embedding sharing. Preprint at https://arxiv.org/abs/2111.09543 (2021).
+[25] Zhang, T., Kishore, V., Wu, F., Weinberger, K. Q. & Artzi, Y. BERTScore: evaluating text generation with BERT. In International Conference on Learning Representations (2020).
+[26] Radford, A. et al. Language models are unsupervised multitask learners. Technical report, OpenAI (2019).

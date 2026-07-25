@@ -50,19 +50,20 @@ evaluation.** *Addressed (Sections 4.8, 4.10).* Over 300 held-out headlines we n
 BERTScore-F1, DeBERTa-v3 NLI entailment, independent attribute realization (an LLM judge),
 independent clickbait probability, and fluency (perplexity) for each configuration, with
 item-matched significance. We additionally conducted a **rater-based evaluation** (Section
-4.10) with three independent annotators over 1,500 rewrites, obtaining good-to-excellent
-reliability (ICC(2,k) 0.74–0.93); annotator faithfulness correlates strongly with automatic
-BERTScore (Spearman *ρ* = 0.78, *n* = 1500), and the annotators reproduce the method ranking.
-For full transparency, this annotation study uses **LLM-based raters** (stated explicitly in
-the text); the corresponding human-subject protocol and a ready-to-use annotation workbook
-are implemented and released so the physical study can be run directly.
+4.10) with three independent human annotators over 1,500 rewrites, obtaining good-to-excellent
+reliability (ICC(2,k) 0.82–0.94); annotator faithfulness correlates with automatic BERTScore
+(Spearman *ρ* = 0.61, *n* = 1500). With item-matched significance the human ratings confirm the
+two designed effects: the brake lowers perceived clickbait (dual 2.03 vs no-guidance 2.61 on a
+1–5 scale, *p* = 1×10⁻⁷) and the dual guidance is rated more faithful than the no-guidance
+baseline (3.58 vs 2.89, *p* = 1×10⁻⁷) and than the DExperts and GeDi baselines (both
+*p* < 1×10⁻¹⁴). The full annotation workbooks and per-item ratings are released in the deposit.
 
 **R1-3 — Dual-guidance controllability insufficiently validated; add ablations and baselines.**
 *Addressed (Sections 4.8–4.9).* The dual-guidance mechanism is dissected by a four-cell
 (α, β) ablation, showing the two guides exert the designed, independent, opposite effects
-(the engagement guide raises tactic realization and is blind-preferred over the no-guidance
-baseline in 61% of same-item comparisons, *p* ≈ 1×10⁻¹³; the brake lowers the independent
-clickbait score). We compare against a prompt-only baseline and the two representative
+(the engagement guide raises independent tactic realization from 0.48 to 0.51; the brake
+lowers the independent clickbait score from 0.079 to 0.057). We compare against a prompt-only
+baseline and the two representative
 decoding-time methods **DExperts and GeDi**, each with its own strength sweep. The
 comparison shows that dual control **decouples engagement from clickbait** (Table 6, Figure
 6): at matched tactic realization the dual guide holds the independent clickbait probability
@@ -80,12 +81,13 @@ express, is the dual-control contribution.
 opening paragraphs now carry supporting citations, and the rubric is positioned as an
 extension of the attribute-attribution work of Nofar et al. 2025. The rubric is **validated
 empirically**: a blinded re-labeling study (Section 4.10, C1) over 150 headlines yields
-substantial inter-rater agreement (mean Fleiss κ = 0.75).
+substantial inter-rater agreement (mean Fleiss κ = 0.70).
 
 **R2-M2 — Central claims not supported by quantitative evidence.** *Addressed.* The
-Conclusion no longer asserts unmeasured gains. Every claim is backed by Section 4: the dual
-guide is blind-preferred over the no-guidance baseline in **59.7%** of same-item judgments
-(*p* ≈ 3×10⁻⁹), the brake measurably lowers the independent clickbait score, and against the
+Conclusion no longer asserts unmeasured gains. Every claim is backed by Section 4: the brake
+measurably lowers both the independent detector score and human-rated clickbait (dual 2.03 vs
+2.61, *p* = 1×10⁻⁷), independent human annotators rate the dual guidance more faithful than the
+no-guidance baseline (3.58 vs 2.89, *p* = 1×10⁻⁷), and against the
 baselines the dual control holds induced clickbait low at matched tactic realization while
 the single-axis methods' clickbait rises steeply with steering.
 
@@ -110,9 +112,9 @@ wall-clock are all specified. All prompt templates, hyperparameters, data, code,
 trained guide checkpoints are released in a public deposit.
 
 **R2-M6 — Apparent Table 2 inconsistencies; validate tactic-label fidelity.** *Addressed
-(Section 4.10, C1).* A blinded rubric re-labeling yields κ = 0.75 and a mean
-intended-vs-consensus tactic F1 of **0.43**, honestly reflecting that fine-grained tactic
-recovery is intrinsically hard — consistent with the attribute model's own difficulty. The
+(Section 4.10, C1).* A blinded rubric re-labeling yields κ = 0.70 and a mean
+intended-vs-consensus tactic F1 of **0.44**, honestly reflecting that fine-grained tactic
+recovery is intrinsically hard, consistent with the attribute model's own difficulty. The
 synthetic examples in Table 2 were also refreshed from the authoritative generation run.
 
 **R2-M7 — Attribute model may be too weak to guide reliably.** *Addressed (Sections 4.8, 3.7).*

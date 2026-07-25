@@ -41,20 +41,20 @@ possible:</p>
 <li>external validation of both guide models on entirely human-authored
 corpora (4.5);</li>
 <li>prefix-level validation of the guide on real headlines (4.6, Figure
-7);</li>
+5);</li>
 <li>a quantified Reuters-neutrality check of the source pool (4.7);</li>
 <li>a four-cell dual-guidance ablation on 300 held-out headlines (4.8,
-Table 5, Figure 5);</li>
+Table 6, Figure 6);</li>
 <li>a comparison against the DExperts and GeDi decoding-time baselines
 showing that dual control decouples engagement from clickbait (4.9,
-Table 6, Figure 6, Table 11);</li>
+Table 7, Figure 7, Table 8);</li>
 <li>a rater-based evaluation with three independent annotators (4.10,
-Table 7);</li>
-<li>a robustness and factuality analysis (4.11, Table 8);</li>
+Table 9);</li>
+<li>a robustness and factuality analysis (4.11, Table 10);</li>
 <li>cross-domain generalization to non-Reuters headlines (4.12, Table
-9);</li>
+11);</li>
 <li>transfer to a second base-model family, Qwen2.5-7B (4.13, Table
-10).</li>
+12).</li>
 </ul>
 <p>Each reviewer point is answered individually below, with the section
 and numbers that now address it. Part 2 lists improvements we made that
@@ -73,7 +73,7 @@ guide reaches <strong>AUROC 0.955</strong> on Chakraborty and
 <strong>0.740</strong> on the noisier graded Webis; the ten attribute
 dimensions all correlate significantly with human clickbait (Spearman
 0.34–0.45, every <em>p</em> &lt; 1×10⁻⁶⁰). A new prefix-level test
-(Section 4.6, Figure 7) shows the guide predicts the human label from an
+(Section 4.6, Figure 5) shows the guide predicts the human label from an
 early prefix, with AUROC rising monotonically from
 <strong>0.891</strong> at 30% of the headline to <strong>0.954</strong>
 at full length. Every clickbait number in the rewrite evaluation is
@@ -106,7 +106,7 @@ realization from 0.48 to 0.51; the brake lowers the independent
 clickbait score from 0.079 to 0.057). We compare against the two
 representative decoding-time methods <strong>DExperts and GeDi</strong>,
 each with its own strength sweep. The dual guide adds an
-<strong>independent clickbait brake</strong> (Table 6, Figure 6): a
+<strong>independent clickbait brake</strong> (Table 7, Figure 7): a
 lever that lowers induced clickbait separately from the engagement
 weight, which the single-axis methods lack. At low steering the
 baselines are competitive, but because their single control couples
@@ -142,10 +142,10 @@ entirely human-authored corpora, scoring <strong>AUROC 0.955 /
 uses an <strong>independent DistilBERT detector trained only on human
 data</strong>, which breaks the loop the reviewer identified.</p>
 <p><strong>R2-M4 — No baselines or ablations.</strong> <em>Addressed
-(Sections 4.8–4.9, Tables 5, 6, 11; Figures 5, 6).</em> Both are now
+(Sections 4.8–4.9, Tables 6, 7, 8; Figures 6, 7).</em> Both are now
 present: the full four-cell ablation and the DExperts and GeDi
-baselines, with a decoupling analysis (Table 6, Figure 6) and a
-qualitative side-by-side (Table 11) showing that when the single-axis
+baselines, with a decoupling analysis (Table 7, Figure 7) and a
+qualitative side-by-side (Table 8) showing that when the single-axis
 baselines are pushed to high steering their induced clickbait rises
 steeply, whereas the dual guide's independent brake keeps it low.
 DExperts is decoded with a repetition penalty and a headline-length cap
@@ -174,7 +174,7 @@ classifier-noise propagation is quantified rather than assumed. The
 judge's own reliability is cross-checked against the rater study's
 recoverability (Section 3.7).</p>
 <p><strong>R2-M8 — Some controlled outputs contradict the framework's
-goals.</strong> <em>Addressed (Section 4.11, Table 8).</em> Each
+goals.</strong> <em>Addressed (Section 4.11, Table 10).</em> Each
 boundary case is discussed explicitly, and the embellishment concern is
 <strong>quantified</strong>: a stricter new-fact judge (validated on
 faithful-paraphrase controls that score ≈ 0.02 and fact-injected
@@ -217,25 +217,25 @@ follows; all are highlighted in the manuscript.</p>
 sizes, and multiple-comparison correction are applied uniformly across
 Section 4, not only where variance was questioned.</li>
 <li><strong>Cross-domain generalization (Section 4.12, Table
-9).</strong> The same guides, at the same operating point, reproduce
+11).</strong> The same guides, at the same operating point, reproduce
 their designed effects on 150 human-authored
 <strong>non-Reuters</strong> headlines (a different register): the brake
 lowers independent clickbait (0.097 → 0.061) and fidelity is preserved
 (BERTScore 0.22–0.28), extending the demonstrated scope to a second
 register.</li>
 <li><strong>Transfer to a second base generator (Section 4.13, Table
-10).</strong> The framework transfers to
+12).</strong> The framework transfers to
 <strong>Qwen2.5-7B-Instruct</strong> (a different model family) with the
 same guides and operating point, maintaining high fidelity and fluency;
 for multilingual base generators we add a language-consistency
 constraint to the decoder (Section 3.6).</li>
-<li><strong>Factuality calibration (Table 8).</strong> The new-fact
+<li><strong>Factuality calibration (Table 10).</strong> The new-fact
 judge and NLI entailment are calibrated on labelled controls, giving the
 fidelity analysis a verified basis.</li>
 <li><strong>Qualitative depth.</strong> A worked "engagement continuum"
 for one headline across the α sweep (Section 4.4), a full four-cell grid
-on three headlines (Table 12), and a qualitative cross-method comparison
-(Table 11) make the control behaviour concrete.</li>
+on three headlines (Table 4), and a qualitative cross-method comparison
+(Table 8) make the control behaviour concrete.</li>
 <li><strong>Objective and evaluators.</strong> The combined objective
 uses the canonical log-domain FUDGE factorization; all evaluators
 (independent DistilBERT detector, LLM tactic judge, DeBERTa-v3 NLI,

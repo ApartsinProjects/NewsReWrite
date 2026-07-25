@@ -17,8 +17,8 @@ with independent evaluators wherever possible:
 - prefix-level validation of the guide on real headlines (4.6, Figure 7);
 - a quantified Reuters-neutrality check of the source pool (4.7);
 - a four-cell dual-guidance ablation on 300 held-out headlines (4.8, Table 5, Figure 5);
-- a comparison against the DExperts, GeDi, and prompt-only baselines with a Pareto
-  analysis (4.9, Table 6, Figure 6, Table 11);
+- a comparison against the DExperts, GeDi, and prompt-only baselines showing that dual
+  control decouples engagement from clickbait (4.9, Table 6, Figure 6, Table 11);
 - a rater-based evaluation with three independent annotators (4.10, Table 7);
 - a robustness and factuality analysis (4.11, Table 8);
 - cross-domain generalization to non-Reuters headlines (4.12, Table 9);
@@ -63,11 +63,16 @@ are implemented and released so the physical study can be run directly.
 (the engagement guide raises tactic realization and is blind-preferred over the no-guidance
 baseline in 61% of same-item comparisons, *p* ≈ 1×10⁻¹³; the brake lowers the independent
 clickbait score). We compare against a prompt-only baseline and the two representative
-decoding-time methods **DExperts and GeDi**, each with its own strength sweep. At matched
-independent tactic level, our method is **Pareto-dominant** (Table 6): comparable tactic
-control at 4–5× lower perplexity and far higher BERTScore, whereas DExperts/GeDi reach the
-same tactic level only by collapsing fidelity (BERTScore −0.32 / 0.06). All cross-method
-differences carry near-maximal effect sizes (|r| ≥ 0.83) surviving Holm correction.
+decoding-time methods **DExperts and GeDi**, each with its own strength sweep. The
+comparison shows that dual control **decouples engagement from clickbait** (Table 6, Figure
+6): at matched tactic realization the dual guide holds the independent clickbait probability
+low (0.057) while preserving fidelity (BERTScore 0.25), whereas the single-axis baselines
+couple the two, so realizing the same tactic drives their induced clickbait up steeply
+(DExperts 0.06 to 0.73 across its strength sweep; GeDi to 0.59) with fidelity falling in
+step. For a fair comparison DExperts is decoded with a repetition penalty (1.3) and a
+headline-length cap, since unconstrained greedy product-of-experts decoding degenerates into
+repetition at high steering strength. This decoupling, which single-axis baselines cannot
+express, is the dual-control contribution.
 
 ### Reviewer 2
 
@@ -80,8 +85,9 @@ substantial inter-rater agreement (mean Fleiss κ = 0.75).
 **R2-M2 — Central claims not supported by quantitative evidence.** *Addressed.* The
 Conclusion no longer asserts unmeasured gains. Every claim is backed by Section 4: the dual
 guide is blind-preferred over the no-guidance baseline in **59.7%** of same-item judgments
-(*p* ≈ 3×10⁻⁹), the brake measurably lowers the independent clickbait score, and the method
-is Pareto-dominant over the baselines.
+(*p* ≈ 3×10⁻⁹), the brake measurably lowers the independent clickbait score, and against the
+baselines the dual control holds induced clickbait low at matched tactic realization while
+the single-axis methods' clickbait rises steeply with steering.
 
 **R2-M3 — Circularity of the evaluation loop.** *Addressed (Section 4.5).* Both guides are
 re-evaluated on human-authored corpora; as anticipated, performance drops from the
@@ -91,8 +97,10 @@ trained only on human data**, which breaks the loop the reviewer identified.
 
 **R2-M4 — No baselines or ablations.** *Addressed (Sections 4.8–4.9, Tables 5, 6, 11;
 Figures 5, 6).* Both are now present: the full four-cell ablation and the prompt-only,
-DExperts, and GeDi baselines, with a Pareto analysis and a qualitative side-by-side (Table
-11) illustrating the baselines' fidelity collapse.
+DExperts, and GeDi baselines, with a decoupling analysis (Table 6, Figure 6) and a
+qualitative side-by-side (Table 11) showing that the single-axis baselines reach the target
+tactic only at markedly higher induced clickbait, whereas the dual brake holds it low.
+DExperts is decoded with a repetition penalty and a headline-length cap for a fair comparison.
 
 **R2-M5 — Missing implementation details / reproducibility.** *Addressed (Section 3.6).* The
 base model (Meta-Llama-3-8B-Instruct), top-k = 50, the log-domain objective and its swept

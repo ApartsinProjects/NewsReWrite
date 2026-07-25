@@ -1,0 +1,260 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Response to the Editor and Reviewers &mdash; NewsReWrite</title><style>
+:root{color-scheme:light; --bg:#fff; --fg:#101418; --muted:#5b6470; --accent:#b45309; --rule:#e4e7eb;}
+html,body{background:#fff;}
+@media (prefers-color-scheme:dark){html,body{background:#fff!important;color:#101418!important;}}
+*{box-sizing:border-box;}
+body{margin:0;font-family:"Georgia","Cambria","Times New Roman",serif;color:var(--fg);line-height:1.55;font-size:17px;}
+main{max-width:820px;margin:0 auto;padding:3rem 1.5rem 6rem;}
+h1,h2,h3{font-family:"Helvetica Neue","Inter",system-ui,sans-serif;line-height:1.25;}
+h1{font-size:1.7rem;margin:0 0 1rem;}
+h2{font-size:1.25rem;margin-top:2rem;padding-bottom:.3rem;border-bottom:1px solid var(--rule);}
+h3{font-size:1.05rem;margin-top:1.5rem;color:var(--accent);}
+p{margin:0 0 1rem;text-align:justify;hyphens:auto;}
+strong{color:var(--fg);}
+hr{border:none;border-top:1px solid var(--rule);margin:2rem 0;}
+ul,ol{padding-left:1.3rem;} li{margin:.3rem 0;}
+code{background:#f4f5f7;padding:.05em .3em;border-radius:3px;font-size:.9em;}
+.dl-bar{position:fixed;top:12px;right:14px;z-index:1000;display:flex;align-items:center;gap:8px;background:#fff;
+  border:1px solid var(--rule);border-radius:8px;padding:6px 10px;box-shadow:0 1px 4px rgba(0,0,0,.08);
+  font:500 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;flex-wrap:wrap;max-width:min(92vw,560px);}
+.dl-bar .dl-label{color:var(--muted);}
+.dl-bar a{color:#fff;background:var(--accent);text-decoration:none;padding:4px 9px;border-radius:5px;font-weight:600;}
+.dl-bar a:hover{filter:brightness(1.08);}
+@media (max-width:720px){.dl-bar{top:8px;right:8px;padding:4px 7px;}}
+</style></head><body><div class="dl-bar" role="navigation" aria-label="Downloads"><a href="index.html">&larr; Paper</a><span class="dl-label">This letter:</span><a href="editor_response_letter.pdf" download>PDF</a><a href="editor_response_letter.docx" download>DOCX</a></div><main><h1 id="response-to-the-editor-and-reviewers">Response to the Editor and
+Reviewers</h1>
+<p><strong>Manuscript:</strong> <em>LLM-guided headline rewriting for
+clickability enhancement without clickbait</em></p>
+<p>We thank the editor and both reviewers for their careful and
+constructive reports. We have <strong>significantly improved and
+expanded the experimental program</strong>, converting a manuscript
+whose central claims rested on qualitative examples into one in which
+every claim is backed by quantitative evidence with independent metrics,
+item-matched significance testing, and confidence intervals. In the
+revised manuscript, every passage changed in this revision is
+highlighted in <strong>yellow</strong>; a white-background HTML mirror
+and a public data/code/model deposit accompany the submission.</p>
+<p>The revised <strong>Section 4 (Experiments and Results)</strong> now
+reports, all on held-out data and with independent evaluators wherever
+possible:</p>
+<ul>
+<li>external validation of both guide models on entirely human-authored
+corpora (4.5);</li>
+<li>prefix-level validation of the guide on real headlines (4.6, Figure
+7);</li>
+<li>a quantified Reuters-neutrality check of the source pool (4.7);</li>
+<li>a four-cell dual-guidance ablation on 300 held-out headlines (4.8,
+Table 5, Figure 5);</li>
+<li>a comparison against the DExperts, GeDi, and prompt-only baselines
+showing that dual control decouples engagement from clickbait (4.9,
+Table 6, Figure 6, Table 11);</li>
+<li>a rater-based evaluation with three independent annotators (4.10,
+Table 7);</li>
+<li>a robustness and factuality analysis (4.11, Table 8);</li>
+<li>cross-domain generalization to non-Reuters headlines (4.12, Table
+9);</li>
+<li>transfer to a second base-model family, Qwen2.5-7B (4.13, Table
+10).</li>
+</ul>
+<p>Each reviewer point is answered individually below, with the section
+and numbers that now address it. Part 2 lists improvements we made that
+were not explicitly requested.</p>
+<hr />
+<h2 id="part-1--point-by-point-responses">Part 1 — Point-by-point
+responses</h2>
+<h3 id="reviewer-1">Reviewer 1</h3>
+<p><strong>R1-1 — Generalization to naturally occurring clickbait /
+validation on public real-world datasets.</strong> <em>Addressed
+(Sections 4.5–4.6).</em> Both guides are now evaluated on two entirely
+human-authored, publicly available corpora never seen in training:
+Chakraborty et al. 2016 (32,000 headlines) and the Webis Clickbait
+Corpus 2017 (2,459 graded), each with 95% bootstrap CIs. The clickbait
+guide reaches <strong>AUROC 0.955</strong> on Chakraborty and
+<strong>0.740</strong> on the noisier graded Webis; the ten attribute
+dimensions all correlate significantly with human clickbait (Spearman
+0.34–0.45, every <em>p</em> &lt; 1×10⁻⁶⁰). A new prefix-level test
+(Section 4.6, Figure 7) shows the guide predicts the human label from an
+early prefix, with AUROC rising monotonically from
+<strong>0.891</strong> at 30% of the headline to <strong>0.954</strong>
+at full length. Every clickbait number in the rewrite evaluation is
+produced by a <strong>separate DistilBERT detector trained only on the
+human-authored Chakraborty data</strong>, never by our own guide.</p>
+<p><strong>R1-2 — Central claims supported only by qualitative examples;
+add quantitative and human evaluation.</strong> <em>Addressed (Sections
+4.8, 4.10).</em> Over 300 held-out headlines we now report BERTScore-F1,
+DeBERTa-v3 NLI entailment, independent attribute realization (an LLM
+judge), independent clickbait probability, and fluency (perplexity) for
+each configuration, with item-matched significance. We additionally
+conducted a <strong>rater-based evaluation</strong> (Section 4.10) with
+three independent human annotators over 1,500 rewrites, obtaining
+good-to-excellent reliability (ICC(2,k) 0.82–0.94); annotator
+faithfulness correlates with automatic BERTScore (Spearman <em>ρ</em> =
+0.61, <em>n</em> = 1500). With item-matched significance the human
+ratings confirm the two designed effects: the brake lowers perceived
+clickbait (dual 2.03 vs no-guidance 2.61 on a 1–5 scale, <em>p</em> =
+1×10⁻⁷) and the dual guidance is rated more faithful than the
+no-guidance baseline (3.58 vs 2.89, <em>p</em> = 1×10⁻⁷) and than the
+DExperts and GeDi baselines (both <em>p</em> &lt; 1×10⁻¹⁴). The full
+annotation workbooks and per-item ratings are released in the
+deposit.</p>
+<p><strong>R1-3 — Dual-guidance controllability insufficiently
+validated; add ablations and baselines.</strong> <em>Addressed (Sections
+4.8–4.9).</em> The dual-guidance mechanism is dissected by a four-cell
+(α, β) ablation, showing the two guides exert the designed, independent,
+opposite effects (the engagement guide raises independent tactic
+realization from 0.48 to 0.51; the brake lowers the independent
+clickbait score from 0.079 to 0.057). We compare against a prompt-only
+baseline and the two representative decoding-time methods
+<strong>DExperts and GeDi</strong>, each with its own strength sweep.
+The comparison shows that dual control <strong>decouples engagement from
+clickbait</strong> (Table 6, Figure 6): at matched tactic realization
+the dual guide holds the independent clickbait probability low (0.057)
+while preserving fidelity (BERTScore 0.25), whereas the single-axis
+baselines couple the two, so realizing the same tactic drives their
+induced clickbait up steeply (DExperts 0.06 to 0.73 across its strength
+sweep; GeDi to 0.59) with fidelity falling in step. For a fair
+comparison DExperts is decoded with a repetition penalty (1.3) and a
+headline-length cap, since unconstrained greedy product-of-experts
+decoding degenerates into repetition at high steering strength. This
+decoupling, which single-axis baselines cannot express, is the
+dual-control contribution.</p>
+<h3 id="reviewer-2">Reviewer 2</h3>
+<p><strong>R2-M1 — Unsupported intro claims; ungrounded, unvalidated
+rubric.</strong> <em>Addressed.</em> The opening paragraphs now carry
+supporting citations, and the rubric is positioned as an extension of
+the attribute-attribution work of Nofar et al. 2025. The rubric is
+<strong>validated empirically</strong>: a blinded re-labeling study
+(Section 4.10, C1) over 150 headlines yields substantial inter-rater
+agreement (mean Fleiss κ = 0.70).</p>
+<p><strong>R2-M2 — Central claims not supported by quantitative
+evidence.</strong> <em>Addressed.</em> The Conclusion no longer asserts
+unmeasured gains. Every claim is backed by Section 4: the brake
+measurably lowers both the independent detector score and human-rated
+clickbait (dual 2.03 vs 2.61, <em>p</em> = 1×10⁻⁷), independent human
+annotators rate the dual guidance more faithful than the no-guidance
+baseline (3.58 vs 2.89, <em>p</em> = 1×10⁻⁷), and against the baselines
+the dual control holds induced clickbait low at matched tactic
+realization while the single-axis methods' clickbait rises steeply with
+steering.</p>
+<p><strong>R2-M3 — Circularity of the evaluation loop.</strong>
+<em>Addressed (Section 4.5).</em> Both guides are re-evaluated on
+entirely human-authored corpora, scoring <strong>AUROC 0.955 /
+0.740</strong> there alongside the in-distribution synthetic score
+(0.9998). Critically, every clickbait number in the rewrite evaluation
+uses an <strong>independent DistilBERT detector trained only on human
+data</strong>, which breaks the loop the reviewer identified.</p>
+<p><strong>R2-M4 — No baselines or ablations.</strong> <em>Addressed
+(Sections 4.8–4.9, Tables 5, 6, 11; Figures 5, 6).</em> Both are now
+present: the full four-cell ablation and the prompt-only, DExperts, and
+GeDi baselines, with a decoupling analysis (Table 6, Figure 6) and a
+qualitative side-by-side (Table 11) showing that the single-axis
+baselines reach the target tactic only at markedly higher induced
+clickbait, whereas the dual brake holds it low. DExperts is decoded with
+a repetition penalty and a headline-length cap for a fair
+comparison.</p>
+<p><strong>R2-M5 — Missing implementation details /
+reproducibility.</strong> <em>Addressed (Section 3.6).</em> The base
+model (Meta-Llama-3-8B-Instruct), top-k = 50, the log-domain objective
+and its swept weights, the tuning grid, cloud hardware, guide-training
+settings, the full synthetic-data generation procedure (batch size,
+tactic sampling, JSON self-repair), and per-headline wall-clock are all
+specified. All prompt templates, hyperparameters, data, code, and the
+trained guide checkpoints are released in a public deposit.</p>
+<p><strong>R2-M6 — Apparent Table 2 inconsistencies; validate
+tactic-label fidelity.</strong> <em>Addressed (Section 4.10, C1).</em> A
+blinded rubric re-labeling yields κ = 0.70 and a mean
+intended-vs-consensus tactic F1 of <strong>0.44</strong>, matching the
+attribute model's own recoverability and reflecting the graded,
+fine-grained nature of the tactics. The synthetic examples in Table 2
+were also refreshed from the authoritative generation run.</p>
+<p><strong>R2-M7 — Attribute model may be too weak to guide
+reliably.</strong> <em>Addressed (Sections 4.8, 3.7).</em> The
+(0,0)→(4,0) contrast isolates the positive guide's contribution
+directly, and attribute realization is measured by an
+<strong>independent</strong> LLM judge rather than the guide itself, so
+classifier-noise propagation is quantified rather than assumed. The
+judge's own reliability is cross-checked against the rater study's
+recoverability (Section 3.7).</p>
+<p><strong>R2-M8 — Some controlled outputs contradict the framework's
+goals.</strong> <em>Addressed (Section 4.11, Table 8).</em> Each
+boundary case is discussed explicitly, and the embellishment concern is
+<strong>quantified</strong>: a stricter new-fact judge (validated on
+faithful-paraphrase controls that score ≈ 0.02 and fact-injected
+controls that score 1.0, AUROC ≈ 1.0) puts the genuine new-fact rate at
+the dual operating point at <strong>0.20, statistically
+indistinguishable from the 0.18 no-guidance baseline</strong>. The
+residual fidelity difference is attributable to the rhetorical question
+form rather than to fabricated content.</p>
+<p><strong>R2 (review question) — "No statistical analysis (single runs,
+no variance, no significance testing)."</strong> <em>Addressed
+throughout.</em> Every reported comparison now uses <strong>item-matched
+Wilcoxon signed-rank tests</strong>, <strong>95% percentile-bootstrap
+confidence intervals</strong> on all table estimates,
+<strong>matched-pairs rank-biserial effect sizes</strong>, and
+<strong>Holm correction</strong> across each family of tests.</p>
+<p><strong>R2-m1 — Cross-reference errors.</strong> <em>Fixed.</em> The
+methodology subsections referenced in the introduction now exist and
+resolve correctly.</p>
+<p><strong>R2-m2 — Reuters-neutrality assumption unverified.</strong>
+<em>Addressed (Section 4.7).</em> The independent detector was run over
+the full 20,825-headline source pool: only <strong>0.61%</strong> exceed
+the clickbait threshold, confirming the neutral baseline rather than
+assuming it. The domain scope is stated explicitly in the
+manuscript.</p>
+<p><strong>R2-m3 — Is the dataset split stratified?</strong>
+<em>Clarified (Sections 4.2–4.3).</em> The split is performed uniformly
+at random at the <strong>source-headline level</strong> (not stratified
+by tactic); because every source contributes both a neutral and a
+clickbait sample, class balance is preserved by construction.</p>
+<p><strong>R2-m4 — Figure y-axis / caption mismatch.</strong>
+<em>Fixed.</em> Figure 3 now labels the axis and caption consistently;
+the per-tactic figure was regenerated from the current guide.</p>
+<hr />
+<h2 id="part-2--additional-improvements-not-explicitly-requested">Part 2
+— Additional improvements (not explicitly requested)</h2>
+<p>Beyond the reviewers' requests, we strengthened the manuscript as
+follows; all are highlighted in the manuscript.</p>
+<ol type="1">
+<li><strong>Full statistical protocol.</strong> Bootstrap CIs, effect
+sizes, and multiple-comparison correction are applied uniformly across
+Section 4, not only where variance was questioned.</li>
+<li><strong>Cross-domain generalization (Section 4.12, Table
+9).</strong> The same guides, at the same operating point, reproduce
+their designed effects on 150 human-authored
+<strong>non-Reuters</strong> headlines (a different register): the brake
+lowers independent clickbait (0.097 → 0.061) and fidelity is preserved
+(BERTScore 0.22–0.28), extending the demonstrated scope to a second
+register.</li>
+<li><strong>Transfer to a second base generator (Section 4.13, Table
+10).</strong> The framework transfers to
+<strong>Qwen2.5-7B-Instruct</strong> (a different model family) with the
+same guides and operating point, maintaining high fidelity and fluency;
+for multilingual base generators we add a language-consistency
+constraint to the decoder (Section 3.6).</li>
+<li><strong>Factuality calibration (Table 8).</strong> The new-fact
+judge and NLI entailment are calibrated on labelled controls, giving the
+fidelity analysis a verified basis.</li>
+<li><strong>Qualitative depth.</strong> A worked "engagement continuum"
+for one headline across the α sweep (Section 4.4), a full four-cell grid
+on three headlines (Table 12), and a qualitative cross-method comparison
+(Table 11) make the control behaviour concrete.</li>
+<li><strong>Objective and evaluators.</strong> The combined objective
+uses the canonical log-domain FUDGE factorization; all evaluators
+(independent DistilBERT detector, LLM tactic judge, DeBERTa-v3 NLI,
+distilGPT-2 perplexity) are independent of the guides.</li>
+<li><strong>Complete citation coverage.</strong> All datasets, methods,
+models, and evaluation metrics are now cited, including the base
+generators (Llama-3, Qwen2.5, GPT-4o) and the evaluation models/metrics
+(BERT, DistilBERT, DeBERTaV3, BERTScore, GPT-2).</li>
+<li><strong>Reproducibility deposit.</strong> Data, code, and the
+trained guide checkpoints are released publicly, with per-item score
+files behind every table.</li>
+<li><strong>Presentation.</strong> Consistent Scientific Reports
+reference style, a white-background HTML mirror, and full yellow
+highlighting of all revisions.</li>
+</ol>
+<p>We believe the manuscript now meets the standard of claims being
+fully supported by the data, and we thank the reviewers again for
+feedback that materially improved the work.</p>
+<p>Sincerely, The authors</p>
+</main></body></html>

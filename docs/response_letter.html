@@ -45,7 +45,7 @@ corpora (4.5);</li>
 <li>a quantified Reuters-neutrality check of the source pool (4.7);</li>
 <li>a four-cell dual-guidance ablation on 300 held-out headlines (4.8,
 Table 5, Figure 5);</li>
-<li>a comparison against the DExperts, GeDi, and prompt-only baselines
+<li>a comparison against the DExperts and GeDi decoding-time baselines
 showing that dual control decouples engagement from clickbait (4.9,
 Table 6, Figure 6, Table 11);</li>
 <li>a rater-based evaluation with three independent annotators (4.10,
@@ -103,21 +103,19 @@ validated; add ablations and baselines.</strong> <em>Addressed (Sections
 (α, β) ablation, showing the two guides exert the designed, independent,
 opposite effects (the engagement guide raises independent tactic
 realization from 0.48 to 0.51; the brake lowers the independent
-clickbait score from 0.079 to 0.057). We compare against a prompt-only
-baseline and the two representative decoding-time methods
-<strong>DExperts and GeDi</strong>, each with its own strength sweep.
-The comparison shows that dual control <strong>decouples engagement from
-clickbait</strong> (Table 6, Figure 6): at matched tactic realization
-the dual guide holds the independent clickbait probability low (0.057)
-while preserving fidelity (BERTScore 0.25), whereas the single-axis
-baselines couple the two, so realizing the same tactic drives their
-induced clickbait up steeply (DExperts 0.06 to 0.73 across its strength
-sweep; GeDi to 0.59) with fidelity falling in step. For a fair
+clickbait score from 0.079 to 0.057). We compare against the two
+representative decoding-time methods <strong>DExperts and GeDi</strong>,
+each with its own strength sweep. The dual guide adds an
+<strong>independent clickbait brake</strong> (Table 6, Figure 6): a
+lever that lowers induced clickbait separately from the engagement
+weight, which the single-axis methods lack. At low steering the
+baselines are competitive, but because their single control couples
+engagement and clickbait, pushing it past the operating point drives
+their induced clickbait up steeply (DExperts 0.06 to 0.73 across its
+strength sweep; GeDi to 0.59) with fidelity falling in step. For a fair
 comparison DExperts is decoded with a repetition penalty (1.3) and a
 headline-length cap, since unconstrained greedy product-of-experts
-decoding degenerates into repetition at high steering strength. This
-decoupling, which single-axis baselines cannot express, is the
-dual-control contribution.</p>
+decoding degenerates into repetition at high steering strength.</p>
 <h3 id="reviewer-2">Reviewer 2</h3>
 <p><strong>R2-M1 — Unsupported intro claims; ungrounded, unvalidated
 rubric.</strong> <em>Addressed.</em> The opening paragraphs now carry
@@ -145,13 +143,13 @@ uses an <strong>independent DistilBERT detector trained only on human
 data</strong>, which breaks the loop the reviewer identified.</p>
 <p><strong>R2-M4 — No baselines or ablations.</strong> <em>Addressed
 (Sections 4.8–4.9, Tables 5, 6, 11; Figures 5, 6).</em> Both are now
-present: the full four-cell ablation and the prompt-only, DExperts, and
-GeDi baselines, with a decoupling analysis (Table 6, Figure 6) and a
-qualitative side-by-side (Table 11) showing that the single-axis
-baselines reach the target tactic only at markedly higher induced
-clickbait, whereas the dual brake holds it low. DExperts is decoded with
-a repetition penalty and a headline-length cap for a fair
-comparison.</p>
+present: the full four-cell ablation and the DExperts and GeDi
+baselines, with a decoupling analysis (Table 6, Figure 6) and a
+qualitative side-by-side (Table 11) showing that when the single-axis
+baselines are pushed to high steering their induced clickbait rises
+steeply, whereas the dual guide's independent brake keeps it low.
+DExperts is decoded with a repetition penalty and a headline-length cap
+for a fair comparison.</p>
 <p><strong>R2-M5 — Missing implementation details /
 reproducibility.</strong> <em>Addressed (Section 3.6).</em> The base
 model (Meta-Llama-3-8B-Instruct), top-k = 50, the log-domain objective

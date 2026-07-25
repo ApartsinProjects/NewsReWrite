@@ -17,7 +17,7 @@ with independent evaluators wherever possible:
 - prefix-level validation of the guide on real headlines (4.6, Figure 7);
 - a quantified Reuters-neutrality check of the source pool (4.7);
 - a four-cell dual-guidance ablation on 300 held-out headlines (4.8, Table 5, Figure 5);
-- a comparison against the DExperts, GeDi, and prompt-only baselines showing that dual
+- a comparison against the DExperts and GeDi decoding-time baselines showing that dual
   control decouples engagement from clickbait (4.9, Table 6, Figure 6, Table 11);
 - a rater-based evaluation with three independent annotators (4.10, Table 7);
 - a robustness and factuality analysis (4.11, Table 8);
@@ -62,18 +62,16 @@ baseline (3.58 vs 2.89, *p* = 1×10⁻⁷) and than the DExperts and GeDi baseli
 *Addressed (Sections 4.8–4.9).* The dual-guidance mechanism is dissected by a four-cell
 (α, β) ablation, showing the two guides exert the designed, independent, opposite effects
 (the engagement guide raises independent tactic realization from 0.48 to 0.51; the brake
-lowers the independent clickbait score from 0.079 to 0.057). We compare against a prompt-only
-baseline and the two representative
-decoding-time methods **DExperts and GeDi**, each with its own strength sweep. The
-comparison shows that dual control **decouples engagement from clickbait** (Table 6, Figure
-6): at matched tactic realization the dual guide holds the independent clickbait probability
-low (0.057) while preserving fidelity (BERTScore 0.25), whereas the single-axis baselines
-couple the two, so realizing the same tactic drives their induced clickbait up steeply
-(DExperts 0.06 to 0.73 across its strength sweep; GeDi to 0.59) with fidelity falling in
-step. For a fair comparison DExperts is decoded with a repetition penalty (1.3) and a
-headline-length cap, since unconstrained greedy product-of-experts decoding degenerates into
-repetition at high steering strength. This decoupling, which single-axis baselines cannot
-express, is the dual-control contribution.
+lowers the independent clickbait score from 0.079 to 0.057). We compare against the two representative
+decoding-time methods **DExperts and GeDi**, each with its own strength sweep. The dual guide
+adds an **independent clickbait brake** (Table 6, Figure 6): a lever that lowers induced
+clickbait separately from the engagement weight, which the single-axis methods lack. At low
+steering the baselines are competitive, but because their single control couples engagement and
+clickbait, pushing it past the operating point drives their induced clickbait up steeply
+(DExperts 0.06 to 0.73 across its strength sweep; GeDi to 0.59) with fidelity falling in step.
+For a fair comparison DExperts is decoded with a repetition penalty (1.3) and a headline-length
+cap, since unconstrained greedy product-of-experts decoding degenerates into repetition at high
+steering strength.
 
 ### Reviewer 2
 
@@ -98,10 +96,11 @@ the rewrite evaluation uses an **independent DistilBERT detector trained only on
 which breaks the loop the reviewer identified.
 
 **R2-M4 — No baselines or ablations.** *Addressed (Sections 4.8–4.9, Tables 5, 6, 11;
-Figures 5, 6).* Both are now present: the full four-cell ablation and the prompt-only,
-DExperts, and GeDi baselines, with a decoupling analysis (Table 6, Figure 6) and a
-qualitative side-by-side (Table 11) showing that the single-axis baselines reach the target
-tactic only at markedly higher induced clickbait, whereas the dual brake holds it low.
+Figures 5, 6).* Both are now present: the full four-cell ablation and the
+DExperts and GeDi baselines, with a decoupling analysis (Table 6, Figure 6) and a
+qualitative side-by-side (Table 11) showing that when the single-axis baselines are pushed to
+high steering their induced clickbait rises steeply, whereas the dual guide's independent brake
+keeps it low.
 DExperts is decoded with a repetition penalty and a headline-length cap for a fair comparison.
 
 **R2-M5 — Missing implementation details / reproducibility.** *Addressed (Section 3.6).* The

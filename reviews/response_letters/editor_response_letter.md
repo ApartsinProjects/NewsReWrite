@@ -113,8 +113,8 @@ trained guide checkpoints are released in a public deposit.
 
 **R2-M6 — Apparent Table 2 inconsistencies; validate tactic-label fidelity.** *Addressed
 (Section 4.10, C1).* A blinded rubric re-labeling yields κ = 0.70 and a mean
-intended-vs-consensus tactic F1 of **0.44**, honestly reflecting that fine-grained tactic
-recovery is intrinsically hard, consistent with the attribute model's own difficulty. The
+intended-vs-consensus tactic F1 of **0.44**, matching the attribute model's own recoverability
+and reflecting the graded, fine-grained nature of the tactics. The
 synthetic examples in Table 2 were also refreshed from the authoritative generation run.
 
 **R2-M7 — Attribute model may be too weak to guide reliably.** *Addressed (Sections 4.8, 3.7).*

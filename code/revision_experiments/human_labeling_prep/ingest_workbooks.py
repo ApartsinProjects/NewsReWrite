@@ -33,9 +33,10 @@ BARE_TACTICS = [
 TACTIC_RENAME = {b: f"tactic__{b}" for b in BARE_TACTICS}
 LIKERT_COLS = ["engagement_1_to_5", "faithfulness_1_to_5", "clickbait_1_to_5"]
 
-C1_SHEET, C2_SHEET = "C1_tactic_labelling", "C2_rewrite_quality"
+C1_SHEET, C2_SHEET, C3_SHEET = "C1_tactic_labelling", "C2_rewrite_quality", "C3_pairwise_engagement"
 C1_DIR = HL / "c1_rubric_validation"
 C2_DIR = HL / "c2_rewrite_quality"
+C3_DIR = HL / "c3_pairwise_engagement"
 
 
 def _validate(df, cols, name, valid, warnings):
@@ -70,6 +71,7 @@ def main():
     if not args.dry_run:
         C1_DIR.mkdir(parents=True, exist_ok=True)
         C2_DIR.mkdir(parents=True, exist_ok=True)
+        C3_DIR.mkdir(parents=True, exist_ok=True)
 
     mapping, all_warnings = [], []
     for i, book in enumerate(books, start=1):
@@ -89,10 +91,33 @@ def main():
             c2 = c2.rename(columns={"notes": "rater_notes"})
         c2["rater_source"] = "human"
 
+        # --- C3 (optional pairwise 2AFC sheet) ---
+        c3 = None
+        n_c3 = 0
+        try:
+            xls = pd.ExcelFile(book)
+            has_c3 = C3_SHEET in xls.sheet_names
+        except Exception:
+            has_c3 = False
+        if has_c3:
+            c3 = pd.read_excel(book, sheet_name=C3_SHEET)
+            if "choice" in c3.columns:
+                bad = int((~c3["choice"].astype(str).str.upper().str.strip().isin(["A", "B"])
+                           & c3["choice"].notna()).sum())
+                blank = int(c3["choice"].isna().sum())
+                if blank:
+                    warnings.append(f"  [{book.name}:C3] 'choice': {blank} blank cell(s)")
+                if bad:
+                    warnings.append(f"  [{book.name}:C3] 'choice': {bad} value(s) not in {{A,B}}")
+            else:
+                warnings.append(f"  [{book.name}:C3] missing 'choice' column")
+            c3["rater_source"] = "human"
+            n_c3 = len(c3)
+
         mapping.append({"rater_id": rid, "source_workbook": book.name,
-                        "c1_rows": len(c1), "c2_rows": len(c2)})
+                        "c1_rows": len(c1), "c2_rows": len(c2), "c3_rows": n_c3})
         status = "DRY-RUN" if args.dry_run else "written"
-        print(f"  {rid}  <- {book.name}   C1={len(c1)}  C2={len(c2)}  [{status}]")
+        print(f"  {rid}  <- {book.name}   C1={len(c1)}  C2={len(c2)}  C3={n_c3}  [{status}]")
         for w in warnings:
             print(w)
         all_warnings += warnings
@@ -100,6 +125,8 @@ def main():
         if not args.dry_run:
             c1.to_csv(C1_DIR / f"{rid}.csv", index=False)
             c2.to_csv(C2_DIR / f"{rid}.csv", index=False)
+            if c3 is not None:
+                c3.to_csv(C3_DIR / f"{rid}.csv", index=False)
 
     if not args.dry_run:
         pd.DataFrame(mapping).to_csv(HL / "rater_workbook_mapping.csv", index=False)

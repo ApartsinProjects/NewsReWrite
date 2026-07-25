@@ -211,6 +211,72 @@ def analyze_c1(study_dir: Path) -> dict:
 # ------------------------------------------------------------------
 # C2 analysis
 # ------------------------------------------------------------------
+def analyze_c3(study_dir: Path) -> dict:
+    """2AFC engagement: raters pick which of two same-source rewrites they would
+    click. oracle.csv carries target_side (A/B) = the positive_only rewrite; the
+    other side is no_guidance. Reports the pooled win-rate for the positive guide
+    with a binomial test, plus inter-rater agreement on the raw choice."""
+    import pandas as pd
+    from scipy.stats import binomtest
+
+    oracle = pd.read_csv(study_dir / "oracle.csv")           # task_id, target_side, ...
+    key = oracle.set_index("task_id")["target_side"].astype(str).str.upper().to_dict()
+    raters = [pd.read_csv(p) for p in sorted(study_dir.glob("rater_*.csv"))]
+    R = len(raters)
+    if R == 0:
+        raise SystemExit("no rater files")
+
+    # per-rater: did they pick the positive_only side?
+    per_rater = []
+    choices_by_item: dict = {}
+    for ri, r in enumerate(raters):
+        ch = r[["task_id", "choice"]].copy()
+        ch["choice"] = ch["choice"].astype(str).str.upper().str.strip()
+        hit = 0
+        n = 0
+        for _, row in ch.iterrows():
+            tid, c = row["task_id"], row["choice"]
+            if tid not in key or c not in ("A", "B"):
+                continue
+            n += 1
+            hit += int(c == key[tid])
+            choices_by_item.setdefault(tid, []).append(c)
+        per_rater.append({"rater": ri, "n": n, "prefer_positive_rate": round(hit / n, 3) if n else None})
+
+    # pooled binomial (every valid rater-judgment)
+    total = sum(p["n"] for p in per_rater)
+    hits = sum(round(p["prefer_positive_rate"] * p["n"]) for p in per_rater if p["n"])
+    bt = binomtest(hits, total, 0.5, alternative="two-sided") if total else None
+
+    # majority-vote per item, then win-rate over items
+    item_pref = []
+    for tid, cs in choices_by_item.items():
+        maj = max(set(cs), key=cs.count)
+        item_pref.append(int(maj == key.get(tid)))
+    # raw inter-rater agreement on A/B choice (mean pairwise percent agreement)
+    agree_pairs = []
+    for cs in choices_by_item.values():
+        if len(cs) >= 2:
+            same = sum(1 for a, b in itertools.combinations(cs, 2) if a == b)
+            tot = len(list(itertools.combinations(cs, 2)))
+            agree_pairs.append(same / tot)
+
+    return {
+        "n_items": oracle["task_id"].nunique(),
+        "n_raters": R,
+        "prefer_positive_pooled": {
+            "hits": int(hits), "n": int(total),
+            "rate": round(hits / total, 3) if total else None,
+            "p_binom_vs_0.5": (bt.pvalue if bt else None),
+            "ci95": [round(bt.proportion_ci().low, 3), round(bt.proportion_ci().high, 3)] if bt else None,
+        },
+        "prefer_positive_majority_vote_item_rate": round(float(np.mean(item_pref)), 3) if item_pref else None,
+        "per_rater": per_rater,
+        "mean_pairwise_choice_agreement": round(float(np.mean(agree_pairs)), 3) if agree_pairs else None,
+        "diagnostics": {},
+    }
+
+
 def analyze_c2(study_dir: Path) -> dict:
     import pandas as pd
     from scipy.stats import wilcoxon, spearmanr
@@ -306,12 +372,17 @@ def main() -> int:
     study_dir = Path(args.study_dir)
     if not (study_dir / "oracle.csv").exists():
         raise SystemExit(f"no oracle.csv in {study_dir}")
-    kind = "c1" if "c1" in study_dir.name else "c2"
+    kind = "c1" if "c1" in study_dir.name else ("c3" if "c3" in study_dir.name else "c2")
 
-    if args.simulate:
+    if args.simulate and kind != "c3":
         _simulate(study_dir, kind, seed=args.seed)
 
-    report = analyze_c1(study_dir) if kind == "c1" else analyze_c2(study_dir)
+    if kind == "c1":
+        report = analyze_c1(study_dir)
+    elif kind == "c3":
+        report = analyze_c3(study_dir)
+    else:
+        report = analyze_c2(study_dir)
     report["study"] = study_dir.name
     report["simulated"] = bool(args.simulate)
 

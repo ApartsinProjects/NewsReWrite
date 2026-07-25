@@ -42,6 +42,18 @@ from common.artifacts import JsonlWriter
 from common.paths import BASE_LLM_ID, RESULTS_DIR, TACTIC_NAMES, ensure_dirs, find_repo_test_csv
 
 
+def _banned_ngram_tokens(seq: list[int], n: int) -> list[int]:
+    """Tokens that would complete a repeated n-gram given the current suffix."""
+    if n <= 0 or len(seq) < n - 1:
+        return []
+    prefix = tuple(seq[-(n - 1):]) if n > 1 else ()
+    banned = []
+    for i in range(len(seq) - n + 1):
+        if tuple(seq[i:i + n - 1]) == prefix:
+            banned.append(seq[i + n - 1])
+    return banned
+
+
 def _dexperts_generate(
     tokenizer,
     base,
@@ -53,11 +65,17 @@ def _dexperts_generate(
     alpha: float,
     top_k: int,
     max_tokens: int,
+    repetition_penalty: float = 1.0,
+    no_repeat_ngram_size: int = 0,
 ) -> str:
     """One DExperts rewrite with KV cache on all three models.
 
     final_logits = base_logits + alpha * (expert_logits - antiexpert_logits),
-    restricted to the base model's top-k, then greedy argmax.
+    restricted to the base model's top-k, then greedy argmax. An optional
+    repetition penalty (CTRL-style) and no-repeat-ngram block are applied to the
+    ensemble scores before selection: unguarded greedy DExperts degenerates into
+    repetition loops at the steering strengths needed to reach the target
+    engagement, so this makes the baseline a fair comparison point.
     """
     import torch
 
@@ -94,11 +112,26 @@ def _dexperts_generate(
             anti_logits = oa.logits[:, -1, :vocab].float().to(base_logits.device)
 
             final_logits = base_logits + alpha * (exp_logits - anti_logits)
+            fl = final_logits[0]
+
+            # Repetition penalty (CTRL-style) on tokens already emitted.
+            if repetition_penalty and repetition_penalty != 1.0 and generated:
+                prev = torch.tensor(sorted(set(generated)), device=fl.device)
+                s = fl[prev]
+                fl = fl.clone()
+                fl[prev] = torch.where(s < 0, s * repetition_penalty, s / repetition_penalty)
+            # Block tokens that would repeat an n-gram.
+            if no_repeat_ngram_size:
+                banned = _banned_ngram_tokens(generated, no_repeat_ngram_size)
+                if banned:
+                    if fl is final_logits[0]:
+                        fl = fl.clone()
+                    fl[torch.tensor(banned, device=fl.device)] = float("-inf")
 
             # Restrict the candidate set to the base model's top-k, then argmax
             # the ensemble within it (canonical DExperts top-k filtering).
             top_idx = torch.topk(base_logits[0], k=min(top_k, vocab)).indices
-            cand_scores = final_logits[0][top_idx]
+            cand_scores = fl[top_idx]
             best_id = int(top_idx[int(torch.argmax(cand_scores))].item())
 
             if best_id == eos_id:
@@ -125,6 +158,11 @@ def main() -> int:
                          "only replicate identical rows.")
     ap.add_argument("--top-k", type=int, default=50)
     ap.add_argument("--max-tokens", type=int, default=150)
+    ap.add_argument("--repetition-penalty", type=float, default=1.0,
+                    help="CTRL-style penalty on already-emitted tokens (1.0 = off). "
+                         "Use e.g. 1.3 to make greedy DExperts a fair baseline.")
+    ap.add_argument("--no-repeat-ngram-size", type=int, default=0,
+                    help="block repeating any n-gram of this size (0 = off; e.g. 3).")
     ap.add_argument("--expert-dir", required=True, help="clickbait expert LM dir (from train_dexperts.py)")
     ap.add_argument("--antiexpert-dir", required=True, help="neutral antiexpert LM dir (from train_dexperts.py)")
     ap.add_argument("--alphas", default="0.5,1,2,4",
@@ -255,6 +293,8 @@ def main() -> int:
                             edited = _dexperts_generate(
                                 tokenizer, base, expert, antiexpert, create_prompt,
                                 neutral, tactic_ids, alpha, args.top_k, args.max_tokens,
+                                repetition_penalty=args.repetition_penalty,
+                                no_repeat_ngram_size=args.no_repeat_ngram_size,
                             )
                         except Exception as e:
                             print(f"[b6-dexperts] WARN item {i} tactic '{label}' "

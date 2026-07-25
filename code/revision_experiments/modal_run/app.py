@@ -862,7 +862,9 @@ def train_dexperts(force: bool = False) -> None:
               gpu=["L40S", "A100-40GB", "A10G"], timeout=8 * 60 * 60)
 def run_dexperts(n_items: int = 300, alphas: str = "0.5,1,2,4",
                  top_k: int = 50, item_start: int = 0, item_end: int = 0,
-                 shard_tag: str = "") -> None:
+                 shard_tag: str = "", repetition_penalty: float = 1.0,
+                 no_repeat_ngram_size: int = 0, max_tokens: int = 150,
+                 out_subdir: str = "b6_dexperts") -> None:
     _ensure_dirs()
     v = _verify()
     src = Path(f"{STORE_MOUNT}/data/source_neutrals.csv")
@@ -871,21 +873,28 @@ def run_dexperts(n_items: int = 300, alphas: str = "0.5,1,2,4",
     anti = f"{STORE_MOUNT}/models/dexperts_antiexpert"
     v.check_model_dir(exp)
     v.check_model_dir(anti)
+    out_dir = f"{STORE_MOUNT}/results/{out_subdir}"
     _run([sys.executable, f"{B6_DIR}/run_dexperts.py",
           "--test-csv", str(src), "--n-items", str(n_items),
           "--expert-dir", exp, "--antiexpert-dir", anti,
           "--alphas", alphas, "--top-k", str(top_k),
           "--item-start", str(item_start), "--item-end", str(item_end),
           "--shard-tag", shard_tag,
-          "--out-dir", f"{STORE_MOUNT}/results/b6_dexperts"],
+          "--repetition-penalty", str(repetition_penalty),
+          "--no-repeat-ngram-size", str(no_repeat_ngram_size),
+          "--max-tokens", str(max_tokens),
+          "--out-dir", out_dir],
          periodic_commit_s=180)
-    v.check_rewrites(f"{STORE_MOUNT}/results/b6_dexperts", expect_min_files=1)
+    v.check_rewrites(out_dir, expect_min_files=1)
     STORE.commit()
 
 
 @app.function(volumes={STORE_MOUNT: STORE}, timeout=10 * 60 * 60)
 def run_dexperts_parallel(n_items: int = 300, n_shards: int = 4,
-                          alphas: str = "0.5,1,2,4", top_k: int = 50) -> None:
+                          alphas: str = "0.5,1,2,4", top_k: int = 50,
+                          repetition_penalty: float = 1.0,
+                          no_repeat_ngram_size: int = 0, max_tokens: int = 150,
+                          out_subdir: str = "b6_dexperts") -> None:
     """Fan out run_dexperts across n_shards containers over disjoint item ranges."""
     _ensure_dirs()
     per = (n_items + n_shards - 1) // n_shards
@@ -897,11 +906,14 @@ def run_dexperts_parallel(n_items: int = 300, n_shards: int = 4,
         print(f"[modal] dexperts shard {k}: items [{s},{e})", flush=True)
         handles.append(run_dexperts.spawn(
             n_items=n_items, alphas=alphas, top_k=top_k,
-            item_start=s, item_end=e, shard_tag=f"_sh{k}"))
+            item_start=s, item_end=e, shard_tag=f"_sh{k}",
+            repetition_penalty=repetition_penalty,
+            no_repeat_ngram_size=no_repeat_ngram_size,
+            max_tokens=max_tokens, out_subdir=out_subdir))
     for h in handles:
         h.get()
     STORE.reload()  # see the shards' committed writes (avoid stale "found 0")
-    _verify().check_rewrites(f"{STORE_MOUNT}/results/b6_dexperts",
+    _verify().check_rewrites(f"{STORE_MOUNT}/results/{out_subdir}",
                              expect_min_files=len(handles))
 
 

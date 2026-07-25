@@ -213,8 +213,8 @@ def analyze_c1(study_dir: Path) -> dict:
 # ------------------------------------------------------------------
 def analyze_c3(study_dir: Path) -> dict:
     """2AFC engagement: raters pick which of two same-source rewrites they would
-    click. oracle.csv carries target_side (A/B) = the positive_only rewrite; the
-    other side is no_guidance. Reports the pooled win-rate for the positive guide
+    click. oracle.csv carries target_side (A/B) = the dual FUDGE (4,2) rewrite; the
+    other side is no_guidance (0,0). Reports the pooled win-rate for the dual method
     with a binomial test, plus inter-rater agreement on the raw choice."""
     import pandas as pd
     from scipy.stats import binomtest
@@ -264,13 +264,13 @@ def analyze_c3(study_dir: Path) -> dict:
     return {
         "n_items": oracle["task_id"].nunique(),
         "n_raters": R,
-        "prefer_positive_pooled": {
+        "prefer_dual_pooled": {
             "hits": int(hits), "n": int(total),
             "rate": round(hits / total, 3) if total else None,
             "p_binom_vs_0.5": (bt.pvalue if bt else None),
             "ci95": [round(bt.proportion_ci().low, 3), round(bt.proportion_ci().high, 3)] if bt else None,
         },
-        "prefer_positive_majority_vote_item_rate": round(float(np.mean(item_pref)), 3) if item_pref else None,
+        "prefer_dual_majority_vote_item_rate": round(float(np.mean(item_pref)), 3) if item_pref else None,
         "per_rater": per_rater,
         "mean_pairwise_choice_agreement": round(float(np.mean(agree_pairs)), 3) if agree_pairs else None,
         "diagnostics": {},

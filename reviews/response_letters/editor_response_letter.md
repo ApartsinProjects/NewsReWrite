@@ -56,7 +56,7 @@ reliability (ICC(2,k) 0.82–0.94); annotator faithfulness correlates with autom
 two designed effects: the brake lowers perceived clickbait (dual 2.03 vs no-guidance 2.61 on a
 1–5 scale, *p* = 1×10⁻⁷) and the dual guidance is rated more faithful than the no-guidance
 baseline (3.58 vs 2.89, *p* = 1×10⁻⁷) and than the DExperts and GeDi baselines (both
-*p* < 1×10⁻¹⁴). The full annotation workbooks and per-item ratings are released in the deposit.
+*p* < 1×10⁻¹³). The full annotation workbooks and per-item ratings are released in the deposit.
 
 **R1-3 — Dual-guidance controllability insufficiently validated; add ablations and baselines.**
 *Addressed (Sections 4.8–4.9).* The dual-guidance mechanism is dissected by a four-cell

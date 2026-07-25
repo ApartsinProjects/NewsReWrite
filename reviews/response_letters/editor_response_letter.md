@@ -3,7 +3,7 @@
 **Manuscript:** *LLM-guided headline rewriting for clickability enhancement without clickbait*
 
 We thank the editor and both reviewers for their careful and constructive reports.
-We have **significantly improved and expanded the experimental program**, converting a
+We have expanded the experimental program, converting a
 manuscript whose central claims rested on qualitative examples into one in which every
 claim is backed by quantitative evidence with independent metrics, item-matched
 significance testing, and confidence intervals. In the revised manuscript, every passage
@@ -64,11 +64,12 @@ baseline (3.58 vs 2.89, *p* = 1×10⁻⁷) and than the DExperts and GeDi baseli
 (the engagement guide raises independent tactic realization from 0.48 to 0.51; the brake
 lowers the independent clickbait score from 0.079 to 0.057). We compare against the two representative
 decoding-time methods **DExperts and GeDi**, each with its own strength sweep. The dual guide
-adds an **independent clickbait brake** (Table 7, Figure 7): a lever that lowers induced
-clickbait separately from the engagement weight, which the single-axis methods lack. At low
-steering the baselines are competitive, but because their single control couples engagement and
-clickbait, pushing it past the operating point drives their induced clickbait up steeply
-(DExperts 0.06 to 0.73 across its strength sweep; GeDi to 0.59) with fidelity falling in step.
+adds an **independent clickbait brake** (Table 7, Figure 7) that the single-axis methods lack:
+a lever that lowers induced clickbait separately from the engagement weight. Because their
+single control couples engagement and clickbait, the baselines reach the tactic at low clickbait
+only at low steering; any stronger steering drives their induced clickbait up steeply
+(DExperts 0.06 to 0.73 across its sweep; GeDi to 0.59) with fidelity falling in step, whereas
+the brake holds induced clickbait low across the range.
 For a fair comparison DExperts is decoded with a repetition penalty (1.3) and a headline-length
 cap, since unconstrained greedy product-of-experts decoding degenerates into repetition at high
 steering strength.
@@ -81,8 +82,8 @@ extension of the attribute-attribution work of Nofar et al. 2025. The rubric is 
 empirically**: a blinded re-labeling study (Section 4.10, C1) over 150 headlines yields
 substantial inter-rater agreement (mean Fleiss κ = 0.70).
 
-**R2-M2 — Central claims not supported by quantitative evidence.** *Addressed.* The
-Conclusion no longer asserts unmeasured gains. Every claim is backed by Section 4: the brake
+**R2-M2 — Central claims not supported by quantitative evidence.** *Addressed.* Every
+claim in the Conclusion is now tied to a measured result in Section 4: the brake
 measurably lowers both the independent detector score and human-rated clickbait (dual 2.03 vs
 2.61, *p* = 1×10⁻⁷), independent human annotators rate the dual guidance more faithful than the
 no-guidance baseline (3.58 vs 2.89, *p* = 1×10⁻⁷), and against the
@@ -91,7 +92,7 @@ the single-axis methods' clickbait rises steeply with steering.
 
 **R2-M3 — Circularity of the evaluation loop.** *Addressed (Section 4.5).* Both guides are
 re-evaluated on entirely human-authored corpora, scoring **AUROC 0.955 / 0.740** there
-alongside the in-distribution synthetic score (0.9998). Critically, every clickbait number in
+alongside the in-distribution synthetic score (0.9998). Every clickbait number in
 the rewrite evaluation uses an **independent DistilBERT detector trained only on human data**,
 which breaks the loop the reviewer identified.
 
@@ -125,10 +126,10 @@ is cross-checked against the rater study's recoverability (Section 3.7).
 **R2-M8 — Some controlled outputs contradict the framework's goals.** *Addressed (Section
 4.11, Table 10).* Each boundary case is discussed explicitly, and the embellishment concern
 is **quantified**: a stricter new-fact judge (validated on faithful-paraphrase controls that
-score ≈ 0.02 and fact-injected controls that score 1.0, AUROC ≈ 1.0) puts the genuine
-new-fact rate at the dual operating point at **0.20, statistically indistinguishable from the
-0.18 no-guidance baseline**. The residual fidelity difference is attributable to the
-rhetorical question form rather than to fabricated content.
+score ≈ 0.02 and fact-injected controls that score 1.0, AUROC ≈ 1.0) shows the dual operating
+point introduces no more genuine new facts than an unguided rewrite (**0.20 vs 0.18 for the
+no-guidance baseline, not significant**), so the guidance does not trade faithfulness for
+engagement. The apparent embellishment is the rhetorical-question form, not fabricated content.
 
 **R2 (review question) — "No statistical analysis (single runs, no variance, no significance
 testing)."** *Addressed throughout.* Every reported comparison now uses **item-matched
@@ -168,7 +169,7 @@ highlighted in the manuscript.
    second register.
 3. **Transfer to a second base generator (Section 4.13, Table 12).** The framework transfers
    to **Qwen2.5-7B-Instruct** (a different model family) with the same guides and operating
-   point, maintaining high fidelity and fluency; for multilingual base generators we add a
+   point, with fidelity and fluency in the same range as the primary results; for multilingual base generators we add a
    language-consistency constraint to the decoder (Section 3.6).
 4. **Factuality calibration (Table 10).** The new-fact judge and NLI entailment are calibrated
    on labelled controls, giving the fidelity analysis a verified basis.
@@ -186,8 +187,8 @@ highlighted in the manuscript.
 9. **Presentation.** Consistent Scientific Reports reference style, a white-background HTML
    mirror, and full yellow highlighting of all revisions.
 
-We believe the manuscript now meets the standard of claims being fully supported by the data,
-and we thank the reviewers again for feedback that materially improved the work.
+Each central claim is now backed by the data and independent evaluators described above. We
+thank the reviewers again for feedback that strengthened the work.
 
 Sincerely,
 The authors

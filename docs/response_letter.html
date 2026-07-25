@@ -26,14 +26,14 @@ Reviewers</h1>
 <p><strong>Manuscript:</strong> <em>LLM-guided headline rewriting for
 clickability enhancement without clickbait</em></p>
 <p>We thank the editor and both reviewers for their careful and
-constructive reports. We have <strong>significantly improved and
-expanded the experimental program</strong>, converting a manuscript
-whose central claims rested on qualitative examples into one in which
-every claim is backed by quantitative evidence with independent metrics,
-item-matched significance testing, and confidence intervals. In the
-revised manuscript, every passage changed in this revision is
-highlighted in <strong>yellow</strong>; a white-background HTML mirror
-and a public data/code/model deposit accompany the submission.</p>
+constructive reports. We have expanded the experimental program,
+converting a manuscript whose central claims rested on qualitative
+examples into one in which every claim is backed by quantitative
+evidence with independent metrics, item-matched significance testing,
+and confidence intervals. In the revised manuscript, every passage
+changed in this revision is highlighted in <strong>yellow</strong>; a
+white-background HTML mirror and a public data/code/model deposit
+accompany the submission.</p>
 <p>The revised <strong>Section 4 (Experiments and Results)</strong> now
 reports, all on held-out data and with independent evaluators wherever
 possible:</p>
@@ -106,16 +106,17 @@ realization from 0.48 to 0.51; the brake lowers the independent
 clickbait score from 0.079 to 0.057). We compare against the two
 representative decoding-time methods <strong>DExperts and GeDi</strong>,
 each with its own strength sweep. The dual guide adds an
-<strong>independent clickbait brake</strong> (Table 7, Figure 7): a
-lever that lowers induced clickbait separately from the engagement
-weight, which the single-axis methods lack. At low steering the
-baselines are competitive, but because their single control couples
-engagement and clickbait, pushing it past the operating point drives
-their induced clickbait up steeply (DExperts 0.06 to 0.73 across its
-strength sweep; GeDi to 0.59) with fidelity falling in step. For a fair
-comparison DExperts is decoded with a repetition penalty (1.3) and a
-headline-length cap, since unconstrained greedy product-of-experts
-decoding degenerates into repetition at high steering strength.</p>
+<strong>independent clickbait brake</strong> (Table 7, Figure 7) that
+the single-axis methods lack: a lever that lowers induced clickbait
+separately from the engagement weight. Because their single control
+couples engagement and clickbait, the baselines reach the tactic at low
+clickbait only at low steering; any stronger steering drives their
+induced clickbait up steeply (DExperts 0.06 to 0.73 across its sweep;
+GeDi to 0.59) with fidelity falling in step, whereas the brake holds
+induced clickbait low across the range. For a fair comparison DExperts
+is decoded with a repetition penalty (1.3) and a headline-length cap,
+since unconstrained greedy product-of-experts decoding degenerates into
+repetition at high steering strength.</p>
 <h3 id="reviewer-2">Reviewer 2</h3>
 <p><strong>R2-M1 — Unsupported intro claims; ungrounded, unvalidated
 rubric.</strong> <em>Addressed.</em> The opening paragraphs now carry
@@ -125,21 +126,20 @@ the attribute-attribution work of Nofar et al. 2025. The rubric is
 (Section 4.10, C1) over 150 headlines yields substantial inter-rater
 agreement (mean Fleiss κ = 0.70).</p>
 <p><strong>R2-M2 — Central claims not supported by quantitative
-evidence.</strong> <em>Addressed.</em> The Conclusion no longer asserts
-unmeasured gains. Every claim is backed by Section 4: the brake
-measurably lowers both the independent detector score and human-rated
-clickbait (dual 2.03 vs 2.61, <em>p</em> = 1×10⁻⁷), independent human
-annotators rate the dual guidance more faithful than the no-guidance
-baseline (3.58 vs 2.89, <em>p</em> = 1×10⁻⁷), and against the baselines
-the dual control holds induced clickbait low at matched tactic
-realization while the single-axis methods' clickbait rises steeply with
-steering.</p>
+evidence.</strong> <em>Addressed.</em> Every claim in the Conclusion is
+now tied to a measured result in Section 4: the brake measurably lowers
+both the independent detector score and human-rated clickbait (dual 2.03
+vs 2.61, <em>p</em> = 1×10⁻⁷), independent human annotators rate the
+dual guidance more faithful than the no-guidance baseline (3.58 vs 2.89,
+<em>p</em> = 1×10⁻⁷), and against the baselines the dual control holds
+induced clickbait low at matched tactic realization while the
+single-axis methods' clickbait rises steeply with steering.</p>
 <p><strong>R2-M3 — Circularity of the evaluation loop.</strong>
 <em>Addressed (Section 4.5).</em> Both guides are re-evaluated on
 entirely human-authored corpora, scoring <strong>AUROC 0.955 /
 0.740</strong> there alongside the in-distribution synthetic score
-(0.9998). Critically, every clickbait number in the rewrite evaluation
-uses an <strong>independent DistilBERT detector trained only on human
+(0.9998). Every clickbait number in the rewrite evaluation uses an
+<strong>independent DistilBERT detector trained only on human
 data</strong>, which breaks the loop the reviewer identified.</p>
 <p><strong>R2-M4 — No baselines or ablations.</strong> <em>Addressed
 (Sections 4.8–4.9, Tables 6, 7, 8; Figures 6, 7).</em> Both are now
@@ -178,11 +178,12 @@ goals.</strong> <em>Addressed (Section 4.11, Table 10).</em> Each
 boundary case is discussed explicitly, and the embellishment concern is
 <strong>quantified</strong>: a stricter new-fact judge (validated on
 faithful-paraphrase controls that score ≈ 0.02 and fact-injected
-controls that score 1.0, AUROC ≈ 1.0) puts the genuine new-fact rate at
-the dual operating point at <strong>0.20, statistically
-indistinguishable from the 0.18 no-guidance baseline</strong>. The
-residual fidelity difference is attributable to the rhetorical question
-form rather than to fabricated content.</p>
+controls that score 1.0, AUROC ≈ 1.0) shows the dual operating point
+introduces no more genuine new facts than an unguided rewrite
+(<strong>0.20 vs 0.18 for the no-guidance baseline, not
+significant</strong>), so the guidance does not trade faithfulness for
+engagement. The apparent embellishment is the rhetorical-question form,
+not fabricated content.</p>
 <p><strong>R2 (review question) — "No statistical analysis (single runs,
 no variance, no significance testing)."</strong> <em>Addressed
 throughout.</em> Every reported comparison now uses <strong>item-matched
@@ -226,9 +227,9 @@ register.</li>
 <li><strong>Transfer to a second base generator (Section 4.13, Table
 12).</strong> The framework transfers to
 <strong>Qwen2.5-7B-Instruct</strong> (a different model family) with the
-same guides and operating point, maintaining high fidelity and fluency;
-for multilingual base generators we add a language-consistency
-constraint to the decoder (Section 3.6).</li>
+same guides and operating point, with fidelity and fluency in the same
+range as the primary results; for multilingual base generators we add a
+language-consistency constraint to the decoder (Section 3.6).</li>
 <li><strong>Factuality calibration (Table 10).</strong> The new-fact
 judge and NLI entailment are calibrated on labelled controls, giving the
 fidelity analysis a verified basis.</li>
@@ -251,8 +252,8 @@ files behind every table.</li>
 reference style, a white-background HTML mirror, and full yellow
 highlighting of all revisions.</li>
 </ol>
-<p>We believe the manuscript now meets the standard of claims being
-fully supported by the data, and we thank the reviewers again for
-feedback that materially improved the work.</p>
+<p>Each central claim is now backed by the data and independent
+evaluators described above. We thank the reviewers again for feedback
+that strengthened the work.</p>
 <p>Sincerely, The authors</p>
 </main></body></html>

@@ -38,7 +38,8 @@ table.data.tl th, table.data.tl td { text-align:left; }
 table.data thead th { background:color-mix(in srgb, var(--muted) 12%, transparent); }
 table.data td span { color:var(--muted); }
 table.data caption { caption-side:top; text-align:left; font-weight:600; color:var(--fg); margin-bottom:.4rem; }
-.eq { text-align:center; margin:1rem 0; }
+.eq { text-align:center; margin:1rem 0; position:relative; }
+.eqnum { position:absolute; right:.2rem; top:50%; transform:translateY(-50%); color:var(--muted); font-family:"Helvetica Neue","Inter",system-ui,sans-serif; font-size:.9rem; }
 ol.refs { font-size:.85rem; padding-left:1.4rem; }
 ol.refs li { margin:.35rem 0; text-align:left; }
 .tablewrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
@@ -53,6 +54,9 @@ ol.refs li { margin:.35rem 0; text-align:left; }
 .cont-sc { flex:0 0 auto; color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap; }
 @media (max-width:620px){ .cont-row{ flex-wrap:wrap; } .cont-lab{ flex-basis:100%; } }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
 </head>
 <body>
 <main>
@@ -134,7 +138,7 @@ ol.refs li { margin:.35rem 0; text-align:left; }
 <p>In parallel, the engagement attribute model provides positive control signals aligned with target clickability objectives. For each attribute k, the model produces a normalized score tac<sub>k</sub>(x·y) ∈ [0, 1] indicating the strength of that engagement mechanism. Desired attributes are selected by a target mask m<sub>k</sub> ∈ {0, 1}, and the overall positive guidance signal is the masked mean tac(x·y) = (Σ<sub>k</sub> m<sub>k</sub>·tac<sub>k</sub>) / (Σ<sub>k</sub> m<sub>k</sub>) over the targeted attributes. This formulation allows explicit specification of which engagement mechanisms should be strengthened and which should be ignored.</p>
 <h3 class="subsubsection">3.5.3 Combined Guidance Objective</h3>
 <p>The final token selection score combines the base LLM log-probability with both guidance terms. <mark>We use the canonical FUDGE factorization in the log domain, which corresponds to the Bayesian product P(text)·P(attribute | text)·P(not-clickbait | text): for each candidate next token y with attribute score tac(·) and clickbait score cb(·) on the extended prefix,</mark></p>
-<p class="eq"><mark>score(y) = log p<sub>LLM</sub>(y) + α · log tac(x·y) + β · log(1 − cb(x·y)).</mark></p>
+<p class="eq">\[ \operatorname{score}(y) = \log p_{\mathrm{LLM}}(y) + \alpha \cdot \log \operatorname{tac}(x{\cdot}y) + \beta \cdot \log\!\bigl(1 - \operatorname{cb}(x{\cdot}y)\bigr) \]</p>
 <p><mark>By adjusting the guidance weights α (engagement) and β (clickbait suppression), the system can smoothly trade off engagement enhancement against editorial restraint. The log domain is used in place of the additive-probability heuristic score = p<sub>LLM</sub> + α·tac − β·cb because it keeps the three factors on a common multiplicative footing and is numerically stable near the score extremes; the weight magnitudes are therefore re-tuned per objective (Section 4.8).</mark> Positive signals encourage the realization of selected clickability attributes, while negative signals continuously penalize excessive amplification, enabling responsible headline rewriting that enhances reader appeal while preserving semantic fidelity.</p>
 
 <h2 class="subsection"><mark>3.6 Implementation Details and Reproducibility</mark></h2>

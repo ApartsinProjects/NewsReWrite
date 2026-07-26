@@ -178,7 +178,12 @@ highlighted in the manuscript.
    operating point, reproduce their designed effects on 150 human-authored **non-Reuters**
    headlines (a different register): the brake lowers independent clickbait (0.097 → 0.061)
    and fidelity is preserved (BERTScore 0.22–0.28), extending the demonstrated scope to a
-   second register.
+   second register. Because those source headlines are drawn from the Chakraborty corpus on
+   which the DistilBERT evaluator was trained, we further retrained the detector **from scratch
+   with those 150 sources excluded** (held-out accuracy 0.99) and re-scored the rewrites: the
+   brake still lowers induced clickbait (0.031 → 0.025 with engagement, 0.017 → 0.011 without)
+   and engagement still raises it (0.017 → 0.031), so the directional effect is **not an
+   artifact of source leakage into the evaluator**.
 3. **Transfer to a second base generator (Section 4.13, Table 12).** We frame this as a
    model-family transfer check rather than a second demonstration of the decoupling: the same
    guides and operating point run on **Qwen2.5-7B-Instruct** with source fidelity and fluency

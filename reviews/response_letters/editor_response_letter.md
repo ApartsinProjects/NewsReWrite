@@ -179,9 +179,15 @@ highlighted in the manuscript.
    headlines (a different register): the brake lowers independent clickbait (0.097 → 0.061)
    and fidelity is preserved (BERTScore 0.22–0.28), extending the demonstrated scope to a
    second register.
-3. **Transfer to a second base generator (Section 4.13, Table 12).** The framework transfers
-   to **Qwen2.5-7B-Instruct** (a different model family) with the same guides and operating
-   point, with fidelity and fluency in the same range as the primary results; for multilingual base generators we add a
+3. **Transfer to a second base generator (Section 4.13, Table 12).** We frame this as a
+   model-family transfer check rather than a second demonstration of the decoupling: the same
+   guides and operating point run on **Qwen2.5-7B-Instruct** with source fidelity and fluency
+   preserved (BERTScore and perplexity at or better than the Llama-3 configuration). The Table 12
+   tactic column now reports the **independent LLM judge** (replacing the guide-based circular
+   score); on Qwen it is flat across cells (≈ 0.50), so the sharp brake-induced drop seen under
+   the circular score was an artifact, not a real loss. Because Qwen's rewrites sit near the
+   detector floor throughout, the decoupling itself is established on the Llama results
+   (Table 7, Figure 7), not re-demonstrated here. For multilingual base generators we add a
    language-consistency constraint to the decoder (Section 3.6).
 4. **Factuality calibration (Table 10).** The new-fact judge and NLI entailment are calibrated
    on labelled controls, giving the fidelity analysis a verified basis.

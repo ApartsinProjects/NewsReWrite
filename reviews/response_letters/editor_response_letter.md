@@ -132,10 +132,15 @@ no-guidance baseline, not significant**), so the guidance does not trade faithfu
 engagement. The apparent embellishment is the rhetorical-question form, not fabricated content.
 
 **R2 (review question) — "No statistical analysis (single runs, no variance, no significance
-testing)."** *Addressed throughout.* Every reported comparison now uses **item-matched
-Wilcoxon signed-rank tests**, **95% percentile-bootstrap confidence intervals** on all table
-estimates, **matched-pairs rank-biserial effect sizes**, and **Holm correction** across each
-family of tests.
+testing)."** *Addressed throughout.* Every reported comparison uses **item-matched
+Wilcoxon signed-rank tests**; **all table estimates carry 95% percentile-bootstrap confidence
+intervals**, now including the single-axis tactic values in Table 7. **Matched-pairs
+rank-biserial effect sizes** are reported for the key contrasts — the ablation Paired-win column
+of Table 6 (r = 0.19–0.22) and the rater faithfulness contrasts (dual vs no-guidance / DExperts /
+GeDi, r = 0.67 / 0.82 / 0.91), collected in Section 3.7. **Holm correction** is applied within
+two explicit families (the four ablation contrasts against the (0,0) cell; the cross-method rater
+faithfulness comparisons), and every reported significant *p*-value remains significant after
+correction within its family (Section 3.7).
 
 **R2-m1 — Cross-reference errors.** *Fixed.* The methodology subsections referenced in the
 introduction now exist and resolve correctly.
